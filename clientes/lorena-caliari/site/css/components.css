@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Manrope:wght@300;400;500;600&display=swap");
+/* Fontes: hospedadas no site (css/fonts.css, carregado antes deste arquivo). O @import do Google em cadeia atrasava a primeira pintura. */
 
 /* Lorena Caliari — estilos dos componentes. Cores, espaços e raios vêm de tokens.css; só o movimento vive aqui. */
 :root {

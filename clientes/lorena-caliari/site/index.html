@@ -6,8 +6,12 @@
 <title>Lorena Caliari | Estética Avançada</title>
 <meta name="description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
 <meta name="theme-color" content="#fffbf7">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="assets/frames/h-000.webp" fetchpriority="high">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/site.css">
@@ -27,7 +31,7 @@
 <header class="nav" id="nav">
   <div class="container nav__bar">
     <a class="brand" href="#topo" aria-label="Lorena Caliari, estética avançada">
-      <img class="brand__symbol" src="assets/logo-symbol.png" alt="" width="295" height="286">
+      <img class="brand__symbol" src="assets/logo-symbol.webp" alt="" width="112" height="109">
       <span class="brand__text">
         <span class="brand__name">Lorena Caliari</span>
         <span class="brand__tag">Estética avançada</span>
@@ -142,7 +146,7 @@
               <span class="mono__ring mono__ring--a"></span>
               <span class="mono__disc"></span>
               <span class="mono__ring mono__ring--b"></span>
-              <img class="mono__logo" src="assets/logo-mark.png" alt="" width="764" height="444">
+              <img class="mono__logo" src="assets/logo-mark.webp" alt="" width="600" height="349" loading="lazy" decoding="async">
               <svg class="mono__spark" style="top:16%;right:20%"><use href="#i-spark"/></svg>
               <svg class="mono__spark" style="bottom:18%;left:18%;width:9px;height:9px"><use href="#i-spark"/></svg>
             </div>
@@ -163,7 +167,7 @@
             </div>
           </div>
           <div class="lc-split__media" aria-hidden="true">
-            <img class="photo" src="assets/stills/realce.webp" alt="" width="720" height="720" loading="lazy">
+            <img class="photo" src="assets/stills/realce.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
           </div>
         </article>
 
@@ -181,7 +185,7 @@
             </div>
           </div>
           <div class="lc-split__media" aria-hidden="true">
-            <img class="photo" src="assets/stills/calma.webp" alt="" width="720" height="720" loading="lazy">
+            <img class="photo" src="assets/stills/calma.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
           </div>
         </article>
 
@@ -208,7 +212,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/bio.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/bio.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -221,7 +225,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/skin.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/skin.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -234,7 +238,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/harmo.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/harmo.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -261,7 +265,7 @@
       <div class="lc-dark reveal">
         <div class="dark-photo">
           <span class="dark-ring" aria-hidden="true"></span>
-          <div class="dark-arch"><img src="assets/lorena.png" alt="Lorena Caliari, farmacêutica, sorrindo, de jaleco branco" width="546" height="591" loading="lazy"></div>
+          <div class="dark-arch"><img src="assets/lorena.webp" alt="Lorena Caliari, farmacêutica, sorrindo, de jaleco branco" width="546" height="591" loading="lazy" decoding="async"></div>
         </div>
         <div class="lc-dark__copy">
           <div class="lc-panel__text">
@@ -317,7 +321,7 @@
 
     <div class="foot__grid">
       <div class="foot__brand">
-        <img class="foot__logo" src="assets/logo-mark-gold.png" alt="Lorena Caliari, estética avançada" width="764" height="444">
+        <img class="foot__logo" src="assets/logo-mark-gold.webp" alt="Lorena Caliari, estética avançada" width="440" height="256" loading="lazy" decoding="async">
         <p class="foot__about">Protocolos de estética avançada pensados para realçar, nunca transformar.</p>
       </div>
       <nav aria-label="Rodapé">
@@ -433,10 +437,10 @@
     }
     // primeiro quadro já; o resto em ondas, sem competir com o resto da página
     const load = (i) => new Promise((done) => { const im = new Image(); im.decoding = "async"; im.onload = im.onerror = done; im.src = url(i); imgs[i] = im; });
-    (async () => {
-      await load(0); paint(0);
-      for (let s = 1; s < N; s += 8) await Promise.all(Array.from({ length: 8 }, (_, k) => (s + k < N ? load(s + k) : null)));
-    })();
+    // os demais quadros só depois que a página terminou de carregar (não disputam banda com o primeiro quadro e as fontes)
+    const rest = async () => { for (let s = 1; s < N; s += 8) await Promise.all(Array.from({ length: 8 }, (_, k) => (s + k < N ? load(s + k) : null))); };
+    const later = () => ("requestIdleCallback" in window ? requestIdleCallback(rest, { timeout: 1500 }) : setTimeout(rest, 200));
+    load(0).then(() => { paint(0); if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true }); });
 
     if (reduce) { toasts[0].classList.add("is-on"); hint.classList.add("is-off"); load(60).then(() => paint(60 / (N - 1))); return; }
     const on = () => { target = progress(); notes(target); };
