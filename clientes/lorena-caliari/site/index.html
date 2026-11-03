@@ -6,9 +6,12 @@
 <title>Lorena Caliari | Estética Avançada</title>
 <meta name="description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
 <meta name="theme-color" content="#fffbf7">
-<link rel="preload" href="assets/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  // Preload das fontes só quando servido por http(s): aberto direto do disco (file://) o Chrome bloqueia o preload por CORS; as fontes carregam pelo CSS do mesmo jeito.
+  if (location.protocol !== "file:") ["cormorant-garamond", "cormorant-garamond-italic", "manrope"].forEach((f) => {
+    const l = document.createElement("link"); l.rel = "preload"; l.as = "font"; l.type = "font/woff2"; l.crossOrigin = ""; l.href = `assets/fonts/${f}.woff2`; document.head.appendChild(l);
+  });
+</script>
 <link rel="preload" as="image" href="assets/frames/h-000.webp" fetchpriority="high">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="stylesheet" href="css/fonts.css">
