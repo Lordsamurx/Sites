@@ -6,13 +6,20 @@
 <title>Lorena Caliari | Estética Avançada</title>
 <meta name="description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
 <meta name="theme-color" content="#fffbf7">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>
+  // Preload das fontes só quando servido por http(s): aberto direto do disco (file://) o Chrome bloqueia o preload por CORS; as fontes carregam pelo CSS do mesmo jeito.
+  if (location.protocol !== "file:") ["cormorant-garamond", "cormorant-garamond-italic", "manrope"].forEach((f) => {
+    const l = document.createElement("link"); l.rel = "preload"; l.as = "font"; l.type = "font/woff2"; l.crossOrigin = ""; l.href = `assets/fonts/${f}.woff2`; document.head.appendChild(l);
+  });
+</script>
+<link rel="preload" as="image" href="assets/frames/h-000.webp" fetchpriority="high">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
+<body class="in-hero">
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <div class="progress" aria-hidden="true"></div>
 
@@ -27,7 +34,7 @@
 <header class="nav" id="nav">
   <div class="container nav__bar">
     <a class="brand" href="#topo" aria-label="Lorena Caliari, estética avançada">
-      <img class="brand__symbol" src="assets/logo-symbol.png" alt="" width="295" height="286">
+      <img class="brand__symbol" src="assets/logo-symbol.webp" alt="" width="112" height="109">
       <span class="brand__text">
         <span class="brand__name">Lorena Caliari</span>
         <span class="brand__tag">Estética avançada</span>
@@ -75,23 +82,26 @@
             </div>
 
             <div class="hero-stage">
-              <span class="hero-ring" aria-hidden="true"></span>
-              <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
-                <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="576" height="720" fetchpriority="high">
-                <canvas id="hero-canvas" width="576" height="720" aria-hidden="true"></canvas>
+              <div class="hero-frame">
+                <span class="hero-frame__line" aria-hidden="true"></span>
+                <svg class="hero-frame__spark" aria-hidden="true"><use href="#i-spark"/></svg>
+                <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
+                  <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="576" height="720" fetchpriority="high">
+                  <canvas id="hero-canvas" width="576" height="720" aria-hidden="true"></canvas>
+                </div>
               </div>
               <div class="hero-toasts" aria-hidden="true">
                 <div class="float float--a"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Avaliação confirmada</span><span class="lc-toast__sub">Sexta, 14h, com a Lorena</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Avaliação completa</span><span class="lc-toast__sub">Pele e rosto, antes de tudo</span></span>
                 </div></div>
                 <div class="float float--b"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Plano personalizado</span><span class="lc-toast__sub">Pronto para você</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Plano individual</span><span class="lc-toast__sub">Feito para o seu tempo</span></span>
                 </div></div>
                 <div class="float float--c"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Retorno agendado</span><span class="lc-toast__sub">Acompanhamento de perto</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Acompanhamento</span><span class="lc-toast__sub">Antes e depois de cada etapa</span></span>
                 </div></div>
               </div>
             </div>
@@ -139,7 +149,7 @@
               <span class="mono__ring mono__ring--a"></span>
               <span class="mono__disc"></span>
               <span class="mono__ring mono__ring--b"></span>
-              <img class="mono__logo" src="assets/logo-mark.png" alt="" width="764" height="444">
+              <img class="mono__logo" src="assets/logo-mark.webp" alt="" width="600" height="349" loading="lazy" decoding="async">
               <svg class="mono__spark" style="top:16%;right:20%"><use href="#i-spark"/></svg>
               <svg class="mono__spark" style="bottom:18%;left:18%;width:9px;height:9px"><use href="#i-spark"/></svg>
             </div>
@@ -160,7 +170,7 @@
             </div>
           </div>
           <div class="lc-split__media" aria-hidden="true">
-            <img class="photo" src="assets/stills/realce.webp" alt="" width="720" height="720" loading="lazy">
+            <img class="photo" src="assets/stills/realce.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
           </div>
         </article>
 
@@ -178,7 +188,7 @@
             </div>
           </div>
           <div class="lc-split__media" aria-hidden="true">
-            <img class="photo" src="assets/stills/calma.webp" alt="" width="720" height="720" loading="lazy">
+            <img class="photo" src="assets/stills/calma.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
           </div>
         </article>
 
@@ -205,7 +215,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/bio.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/bio.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -218,7 +228,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/skin.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/skin.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -231,7 +241,7 @@
           </div>
           <div class="lc-card__media">
             <div class="lc-card__layer" style="background:var(--sand-gradient)">
-              <img class="photo" src="assets/stills/harmo.webp" alt="" width="720" height="720" loading="lazy">
+              <img class="photo" src="assets/stills/harmo.webp" alt="" width="720" height="720" loading="lazy" decoding="async">
             </div>
             <div class="lc-card__glow"></div>
           </div>
@@ -240,38 +250,36 @@
     </div>
   </section>
 
-  <!-- Lorena -->
-  <section class="section" id="lorena" aria-labelledby="t-lorena">
+  <!-- Compromisso: declaração tipográfica, sem cartão -->
+  <section class="section promise" aria-labelledby="t-impacto">
     <div class="container">
-      <div class="about reveal">
-        <p class="lc-overline lc-overline--center"><svg aria-hidden="true"><use href="#i-spark"/></svg>Quem cuida de você</p>
-        <h2 class="lc-title" id="t-lorena">Olá, eu sou a <span class="lc-hl">Lorena</span></h2>
-        <p class="lc-body panel-body">Sou farmacêutica e trabalho com estética avançada. Acredito em orientar com clareza: explicar o que cada procedimento faz, o que esperar e quando não vale a pena.</p>
-        <p class="about__quote">O colágeno tem um currículo, você só não tinha lido ainda.</p>
-        <a class="lc-btn lc-btn--solid" href="#" data-wa="Olá, Lorena! Gostaria de conversar sobre uma avaliação.">
-          <span>Falar no WhatsApp</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-        </a>
+      <div class="promise__inner reveal">
+        <span class="promise__orn" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+        <p class="lc-overline lc-overline--center"><svg aria-hidden="true"><use href="#i-spark"/></svg>Nosso compromisso</p>
+        <h2 class="lc-title promise__title" id="t-impacto">Resultado natural, <span class="lc-hl">sem pressa</span></h2>
+        <p class="lc-body promise__body">Sem promessa de milagre. Um plano feito para o seu tempo, com acompanhamento de perto e resultados que se constroem de forma gradual.</p>
       </div>
     </div>
   </section>
 
-  <!-- Painel de impacto -->
-  <section class="section" style="padding-top:0" aria-labelledby="t-impacto">
+  <!-- Lorena: apresentação e foto no painel escuro -->
+  <section class="section" id="lorena" style="padding-top:0" aria-labelledby="t-lorena">
     <div class="container">
       <div class="lc-dark reveal">
         <div class="dark-photo">
           <span class="dark-ring" aria-hidden="true"></span>
-          <div class="dark-arch"><img src="assets/lorena.png" alt="Lorena Caliari, farmacêutica, sorrindo, de jaleco branco" width="546" height="591" loading="lazy"></div>
+          <div class="dark-arch"><img src="assets/lorena.webp" alt="Lorena Caliari, farmacêutica, sorrindo, de jaleco branco" width="546" height="591" loading="lazy" decoding="async"></div>
         </div>
         <div class="lc-dark__copy">
           <div class="lc-panel__text">
-            <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Nosso compromisso</p>
-            <h2 class="lc-title" id="t-impacto">Resultado natural, <span class="lc-hl">sem pressa</span></h2>
-            <p class="lc-body" style="margin-top:var(--space-3)">Sem promessa de milagre. Um plano feito para o seu tempo, com acompanhamento de perto e resultados que se constroem de forma gradual.</p>
+            <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Quem cuida de você</p>
+            <h2 class="lc-title" id="t-lorena">Olá, eu sou a <span class="lc-hl">Lorena</span></h2>
+            <p class="lc-body dark-body">Sou farmacêutica e trabalho com estética avançada. Acredito em orientar com clareza: explicar o que cada procedimento faz, o que esperar e quando não vale a pena.</p>
+            <p class="about__quote">O colágeno tem um currículo, você só não tinha lido ainda.</p>
           </div>
           <div class="lc-panel__foot">
-            <a class="lc-btn lc-btn--on-dark" href="#" data-wa="Olá, Lorena! Quero entender qual plano faz sentido para mim.">
-              <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+            <a class="lc-btn lc-btn--on-dark" href="#" data-wa="Olá, Lorena! Gostaria de conversar sobre uma avaliação.">
+              <span>Falar no WhatsApp</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
             </a>
           </div>
         </div>
@@ -316,7 +324,7 @@
 
     <div class="foot__grid">
       <div class="foot__brand">
-        <img class="foot__logo" src="assets/logo-mark-gold.png" alt="Lorena Caliari, estética avançada" width="764" height="444">
+        <img class="foot__logo" src="assets/logo-mark-gold.webp" alt="Lorena Caliari, estética avançada" width="440" height="256" loading="lazy" decoding="async">
         <p class="foot__about">Protocolos de estética avançada pensados para realçar, nunca transformar.</p>
       </div>
       <nav aria-label="Rodapé">
@@ -432,10 +440,10 @@
     }
     // primeiro quadro já; o resto em ondas, sem competir com o resto da página
     const load = (i) => new Promise((done) => { const im = new Image(); im.decoding = "async"; im.onload = im.onerror = done; im.src = url(i); imgs[i] = im; });
-    (async () => {
-      await load(0); paint(0);
-      for (let s = 1; s < N; s += 8) await Promise.all(Array.from({ length: 8 }, (_, k) => (s + k < N ? load(s + k) : null)));
-    })();
+    // os demais quadros só depois que a página terminou de carregar (não disputam banda com o primeiro quadro e as fontes)
+    const rest = async () => { for (let s = 1; s < N; s += 8) await Promise.all(Array.from({ length: 8 }, (_, k) => (s + k < N ? load(s + k) : null))); };
+    const later = () => ("requestIdleCallback" in window ? requestIdleCallback(rest, { timeout: 1500 }) : setTimeout(rest, 200));
+    load(0).then(() => { paint(0); if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true }); });
 
     if (reduce) { toasts[0].classList.add("is-on"); hint.classList.add("is-off"); load(60).then(() => paint(60 / (N - 1))); return; }
     const on = () => { target = progress(); notes(target); };
@@ -445,7 +453,7 @@
 
   // Polimento da rolagem: barra de progresso, link ativo, profundidade nos painéis empilhados e pílula do WhatsApp
   (() => {
-    const bar = document.querySelector(".progress"), foot = document.querySelector(".foot");
+    const bar = document.querySelector(".progress"), foot = document.querySelector(".foot"), hero = document.getElementById("topo");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, wide = matchMedia("(min-width: 900px)");
     const panels = [...document.querySelectorAll(".stack .lc-split")];
     const links = [...document.querySelectorAll(".nav__links a")], map = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
@@ -456,6 +464,7 @@
       const max = document.documentElement.scrollHeight - innerHeight;
       bar.style.setProperty("--sp", max > 0 ? (scrollY / max).toFixed(4) : 0);
       document.body.classList.toggle("at-foot", foot.getBoundingClientRect().top < innerHeight - 120);
+      document.body.classList.toggle("in-hero", hero.getBoundingClientRect().bottom > innerHeight * 0.35);   // pílula e barra do WhatsApp só depois do hero
       let cur = null; for (const el of secs) if (el.getBoundingClientRect().top <= innerHeight * 0.4) cur = el.id;
       links.forEach((a) => a.classList.toggle("is-current", a === map.get(cur)));
       if (reduce) return;
