@@ -1,0 +1,61 @@
+/* Lorena Caliari — tokens (espelho de design-system/project/tokens.json) */
+:root {
+  --cream: #fffbf7;
+  --white: #ffffff;
+  --beige: #eadbc8;
+  --beige-light: #f4ebe0;
+  --gold: #c9a86a;
+  --gold-dark: #b8935a;
+  --gold-ink: #7d5f33;
+  --brown: #2b1e16;
+  --brown-deep: #1a120d;
+  --cocoa: #5c4a3d;
+  --taupe: #6b5a4e;
+  --sand: #b8a595;
+
+  --bg-page: var(--cream);
+  --bg-surface: var(--white);
+  --bg-tint: var(--beige-light);
+  --bg-inverse: var(--brown);
+  --text-strong: var(--brown);
+  --text-body: var(--brown);
+  --text-secondary: var(--cocoa);
+  --text-muted: var(--taupe);
+  --text-on-inverse: var(--cream);
+  --text-muted-inverse: var(--sand);
+  --accent: var(--gold);
+  --accent-hover: var(--gold-dark);
+  --on-accent: var(--brown);
+  --accent-text: var(--gold-ink);
+  --border-subtle: var(--beige);
+  --focus-ring: var(--brown);
+
+  --font-display: "Cormorant Garamond", "Cormorant", Georgia, serif;
+  --font-sans: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-18: 72px;
+  --space-20: 80px;
+
+  --radius-sm: 9px;
+  --radius-md: 12px;
+  --radius-lg: 17px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-pill: 64px;
+
+  --shadow-lift: 0 1px 2.5px 1px rgba(43, 30, 22, 0.12);
+  --shadow-nav: 0 0 10px rgba(43, 30, 22, 0.08);
+  --shadow-halo: 0 0 33px rgba(184, 147, 90, 0.25);
+
+  --layout-container: 1204px;
+  --layout-gutter: 30px;
+}

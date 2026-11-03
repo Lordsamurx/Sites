@@ -1,0 +1,33 @@
+<!-- @dsCard height=288 -->
+<div class="cv">
+  <style>
+    .cv { position: relative; width: 960px; height: 288px; overflow: hidden; background: var(--bg-page); }
+    .cv svg { position: absolute; top: 0; left: 480px; width: 480px; height: 288px; }
+    .cv .beige { fill: var(--beige); }
+    .cv .gold { fill: var(--gold); }
+    .cv .brown { fill: var(--brown); }
+    .cv .pill { fill: var(--gold-dark); rx: calc(var(--space-6) / 2); }
+    .cv .r-xl { rx: var(--radius-xl); }
+    .cv .r-md { rx: var(--radius-md); }
+    .cv__text { position: absolute; left: var(--space-12); bottom: var(--space-12); max-width: 440px; }
+    .cv__name { margin: 0; color: var(--text-strong); font: 300 84px/0.95 var(--font-display); letter-spacing: -0.01em; }
+    .cv__tag { margin: var(--space-3) 0 0; color: var(--text-muted); font: 400 14px/20px var(--font-sans); }
+  </style>
+  <svg viewBox="0 0 480 288" aria-hidden="true">
+    <!-- blocks: beige slab 264x288 (bleeds top/bottom, the sand ground of the logo), gold 168x168 r=radius-xl, brown 120x96 r=radius-md -->
+    <!-- arrangement: one tall beige slab on the right, a gold tile overlapping its left edge, a small brown tile stepped below -->
+    <!-- pattern: pills (row "soft, large radii"): every action is a radius-pill, so four gold-dark pills cut into the beige slab -->
+    <!-- scales: pill 96x24 (space-6 high, rx half), pitch 48 (space-12), insets 24 (space-6), radius-xl 24, radius-md 12 -->
+    <rect class="beige" x="216" y="0" width="264" height="288"/>
+    <rect class="gold r-xl" x="120" y="24" width="168" height="168"/>
+    <rect class="brown r-md" x="48" y="168" width="120" height="96"/>
+    <rect class="pill" x="336" y="48" width="96" height="24"/>
+    <rect class="pill" x="360" y="96" width="96" height="24"/>
+    <rect class="pill" x="336" y="144" width="96" height="24"/>
+    <rect class="pill" x="360" y="192" width="96" height="24"/>
+  </svg>
+  <div class="cv__text">
+    <p class="cv__name">Lorena<br>Caliari</p>
+    <p class="cv__tag">Estética avançada com luxo silencioso: areia, dourado e serifa leve.</p>
+  </div>
+</div>
