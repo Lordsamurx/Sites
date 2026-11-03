@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/site.css">
 </head>
-<body>
+<body class="in-hero">
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
 <div class="progress" aria-hidden="true"></div>
 
@@ -75,23 +75,26 @@
             </div>
 
             <div class="hero-stage">
-              <span class="hero-ring" aria-hidden="true"></span>
-              <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
-                <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="576" height="720" fetchpriority="high">
-                <canvas id="hero-canvas" width="576" height="720" aria-hidden="true"></canvas>
+              <div class="hero-frame">
+                <span class="hero-frame__line" aria-hidden="true"></span>
+                <svg class="hero-frame__spark" aria-hidden="true"><use href="#i-spark"/></svg>
+                <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
+                  <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="576" height="720" fetchpriority="high">
+                  <canvas id="hero-canvas" width="576" height="720" aria-hidden="true"></canvas>
+                </div>
               </div>
               <div class="hero-toasts" aria-hidden="true">
                 <div class="float float--a"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Avaliação confirmada</span><span class="lc-toast__sub">Sexta, 14h, com a Lorena</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Avaliação completa</span><span class="lc-toast__sub">Pele e rosto, antes de tudo</span></span>
                 </div></div>
                 <div class="float float--b"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Plano personalizado</span><span class="lc-toast__sub">Pronto para você</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Plano individual</span><span class="lc-toast__sub">Feito para o seu tempo</span></span>
                 </div></div>
                 <div class="float float--c"><div class="lc-toast">
                   <span class="lc-toast__icon"><svg aria-hidden="true"><use href="#i-spark"/></svg></span>
-                  <span class="lc-toast__text"><span class="lc-toast__title">Retorno agendado</span><span class="lc-toast__sub">Acompanhamento de perto</span></span>
+                  <span class="lc-toast__text"><span class="lc-toast__title">Acompanhamento</span><span class="lc-toast__sub">Antes e depois de cada etapa</span></span>
                 </div></div>
               </div>
             </div>
@@ -240,23 +243,20 @@
     </div>
   </section>
 
-  <!-- Lorena -->
-  <section class="section" id="lorena" aria-labelledby="t-lorena">
+  <!-- Compromisso: declaração tipográfica, sem cartão -->
+  <section class="section promise" aria-labelledby="t-impacto">
     <div class="container">
-      <div class="about reveal">
-        <p class="lc-overline lc-overline--center"><svg aria-hidden="true"><use href="#i-spark"/></svg>Quem cuida de você</p>
-        <h2 class="lc-title" id="t-lorena">Olá, eu sou a <span class="lc-hl">Lorena</span></h2>
-        <p class="lc-body panel-body">Sou farmacêutica e trabalho com estética avançada. Acredito em orientar com clareza: explicar o que cada procedimento faz, o que esperar e quando não vale a pena.</p>
-        <p class="about__quote">O colágeno tem um currículo, você só não tinha lido ainda.</p>
-        <a class="lc-btn lc-btn--solid" href="#" data-wa="Olá, Lorena! Gostaria de conversar sobre uma avaliação.">
-          <span>Falar no WhatsApp</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
-        </a>
+      <div class="promise__inner reveal">
+        <span class="promise__orn" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+        <p class="lc-overline lc-overline--center"><svg aria-hidden="true"><use href="#i-spark"/></svg>Nosso compromisso</p>
+        <h2 class="lc-title promise__title" id="t-impacto">Resultado natural, <span class="lc-hl">sem pressa</span></h2>
+        <p class="lc-body promise__body">Sem promessa de milagre. Um plano feito para o seu tempo, com acompanhamento de perto e resultados que se constroem de forma gradual.</p>
       </div>
     </div>
   </section>
 
-  <!-- Painel de impacto -->
-  <section class="section" style="padding-top:0" aria-labelledby="t-impacto">
+  <!-- Lorena: apresentação e foto no painel escuro -->
+  <section class="section" id="lorena" style="padding-top:0" aria-labelledby="t-lorena">
     <div class="container">
       <div class="lc-dark reveal">
         <div class="dark-photo">
@@ -265,13 +265,14 @@
         </div>
         <div class="lc-dark__copy">
           <div class="lc-panel__text">
-            <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Nosso compromisso</p>
-            <h2 class="lc-title" id="t-impacto">Resultado natural, <span class="lc-hl">sem pressa</span></h2>
-            <p class="lc-body" style="margin-top:var(--space-3)">Sem promessa de milagre. Um plano feito para o seu tempo, com acompanhamento de perto e resultados que se constroem de forma gradual.</p>
+            <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Quem cuida de você</p>
+            <h2 class="lc-title" id="t-lorena">Olá, eu sou a <span class="lc-hl">Lorena</span></h2>
+            <p class="lc-body dark-body">Sou farmacêutica e trabalho com estética avançada. Acredito em orientar com clareza: explicar o que cada procedimento faz, o que esperar e quando não vale a pena.</p>
+            <p class="about__quote">O colágeno tem um currículo, você só não tinha lido ainda.</p>
           </div>
           <div class="lc-panel__foot">
-            <a class="lc-btn lc-btn--on-dark" href="#" data-wa="Olá, Lorena! Quero entender qual plano faz sentido para mim.">
-              <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+            <a class="lc-btn lc-btn--on-dark" href="#" data-wa="Olá, Lorena! Gostaria de conversar sobre uma avaliação.">
+              <span>Falar no WhatsApp</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
             </a>
           </div>
         </div>
@@ -445,7 +446,7 @@
 
   // Polimento da rolagem: barra de progresso, link ativo, profundidade nos painéis empilhados e pílula do WhatsApp
   (() => {
-    const bar = document.querySelector(".progress"), foot = document.querySelector(".foot");
+    const bar = document.querySelector(".progress"), foot = document.querySelector(".foot"), hero = document.getElementById("topo");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, wide = matchMedia("(min-width: 900px)");
     const panels = [...document.querySelectorAll(".stack .lc-split")];
     const links = [...document.querySelectorAll(".nav__links a")], map = new Map(links.map((a) => [a.getAttribute("href").slice(1), a]));
@@ -456,6 +457,7 @@
       const max = document.documentElement.scrollHeight - innerHeight;
       bar.style.setProperty("--sp", max > 0 ? (scrollY / max).toFixed(4) : 0);
       document.body.classList.toggle("at-foot", foot.getBoundingClientRect().top < innerHeight - 120);
+      document.body.classList.toggle("in-hero", hero.getBoundingClientRect().bottom > innerHeight * 0.35);   // pílula e barra do WhatsApp só depois do hero
       let cur = null; for (const el of secs) if (el.getBoundingClientRect().top <= innerHeight * 0.4) cur = el.id;
       links.forEach((a) => a.classList.toggle("is-current", a === map.get(cur)));
       if (reduce) return;

@@ -19,9 +19,10 @@ Dourado `gold` não é cor de texto sobre claro (usar `gold-ink`). Títulos de p
 
 ## Pendências
 - **WhatsApp:** `WA_NUMBER` no fim do `index.html` é placeholder (`5500000000000`).
-- **Conteúdo a validar com a Lorena:** nomes e descrições dos tratamentos (só "Bioestimuladores" e "Skinbooster" vêm do design system); textos das notificações do hero (demonstrativas, "Sexta, 14h").
+- **Conteúdo a validar com a Lorena:** nomes e descrições dos tratamentos (só "Bioestimuladores" e "Skinbooster" vêm do design system); textos dos balões do hero (hoje resumem os três passos: "Avaliação completa", "Plano individual", "Acompanhamento").
 - **Instagram:** link do rodapé ainda é `#`.
 - **Qualidade de imagem:** vídeo é 720p (arco do hero fica macio em telas retina); foto da Lorena (`assets/lorena.png`) tem só 546×591 e aparece no painel escuro. Pedir versões maiores.
 - **Logo:** pedir arquivo vetorial (SVG/PNG grande); o recorte atual é automático.
 - **Bug conhecido no design system:** `.lc-split` colapsa no mobile (flex 1 1 0 em coluna). Corrigido só em `site.css` (`.lc-split > * { flex: none }`); falta corrigir em `components/bundle.css` e adicionar quadro mobile na prévia do SplitPanel.
+- **Fonte:** na Cormorant Garamond o circunflexo minúsculo ("você") fica alto e solto do "e"; é desenho da fonte (aparece em todos os pesos), não erro de CSS.
 - **Rosto do cartão "Bioestimuladores":** o quadro com pálpebra caída foi trocado; não há retoque de pixel, só seleção de quadros do vídeo.
