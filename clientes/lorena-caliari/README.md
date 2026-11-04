@@ -28,6 +28,8 @@ Trilho de 340vh (84 quadros; `N` e `CUTS` no script) com palco `position: sticky
 Dourado `gold` não é cor de texto sobre claro (usar `gold-ink`). Títulos de painel em CAIXA ALTA com uma palavra em itálico dourado. Botão é sempre pílula com seta. Sem emoji. Ver `design-system/project/README.md`.
 
 ## Pendências
+Lista de perguntas para a Lorena, em formato de checklist: `CHECKLIST-CLIENTE.md`.
+
 - **WhatsApp:** `WA_NUMBER` no fim do `index.html` é placeholder (`5500000000000`).
 - **Conteúdo a validar com a Lorena:** nomes e descrições dos tratamentos (só "Bioestimuladores" e "Skinbooster" vêm do design system); textos dos balões do hero (hoje resumem os três passos: "Avaliação completa", "Plano individual", "Acompanhamento").
 - **Endereço e mapa:** o card "Onde estamos" do rodapé está reservado. Preencher `ADDRESS` no script do `index.html` (endereço real, confirmado com a Lorena): o card troca a arte pelo mapa do Google (iframe com filtro dourado) e ativa o botão "Como chegar". Sem endereço, mostra "Endereço em breve".
