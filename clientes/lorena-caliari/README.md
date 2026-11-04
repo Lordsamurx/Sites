@@ -7,7 +7,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `site/index.html` — página (HTML + JS inline no final).
 - `site/css/fonts.css` (fontes hospedadas no site), `tokens.css` (espelho de `tokens.json`), `components.css` (cópia de `bundle.css`, sem o `@import` do Google Fonts), `site.css` (layout da página).
 - `site/assets/fonts/` — Cormorant Garamond (normal e itálico) e Manrope, WOFF2 variáveis, subconjunto latino (licença SIL OFL).
-- `site/assets/frames/` — 99 quadros WebP do hero (recortes 4:5 do vídeo, sem a piscada).
+- `site/assets/frames/` — 99 quadros WebP do hero (recortes 4:5 do vídeo, sem a piscada; ampliados e levemente nitidificados para 720×900, o primeiro em 1080×1350. Se regenerar com OpenCV, use caminho relativo: imwrite falha em silêncio com "Á" no caminho).
 - `site/assets/stills/` — recortes quadrados do vídeo para cartões e painéis.
 - `site/assets/logo-*.png` — logo com fundo transparente (recorte automático do cartão original 260×164). Masters; a página usa as versões `.webp` redimensionadas.
 - `site/assets/lorena.png` — master da foto; a página usa `lorena.webp`. `favicon.png` vem do símbolo dourado.

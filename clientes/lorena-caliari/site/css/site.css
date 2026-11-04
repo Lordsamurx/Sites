@@ -531,3 +531,16 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
   .dark-ring { width: min(560px, 118%); }
   .lc-card__desc { max-width: none; }
 }
+
+/* ===== Rodada 6: brilho dourado nos selos e botões principais (mesmo efeito das pílulas) ===== */
+.hero .lc-hero__content > .lc-overline { overflow: hidden; box-shadow: 0 0 22px rgba(201, 168, 106, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+.hero .lc-hero__content > .lc-overline::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%); translate: -120% 0; animation: lc-sheen 5.5s ease-in-out infinite; animation-delay: 0.6s; pointer-events: none; }
+.lc-btn--solid { background-image: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.55) 50%, transparent 62%), var(--gold-sheen); background-size: 260% 100%, 100% 100%; background-repeat: no-repeat; background-position: 160% 0, 0 0; animation: lc-btn-sheen 5.5s ease-in-out infinite; box-shadow: 0 0 20px rgba(201, 168, 106, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.5); }
+.nav__cta.lc-btn--solid { box-shadow: 0 0 20px rgba(201, 168, 106, 0.38), 0 10px 24px -12px rgba(125, 95, 51, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5); }
+.lc-btn--solid:hover { background-image: var(--gold-sheen); animation: none; }
+@keyframes lc-btn-sheen { 0%, 55% { background-position: 160% 0, 0 0; } 100% { background-position: -60% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .hero .lc-hero__content > .lc-overline::after { animation: none; } .lc-btn--solid { animation: none; } }
+
+/* Hero: quadro estático e arco mais nítidos (quadros em 720×900, o primeiro em 1080×1350) */
+.hero-arch img, .hero-arch canvas { image-rendering: auto; }
+.hero-arch { box-shadow: 0 40px 70px -40px rgba(125, 95, 51, 0.55), 0 0 0 1px rgba(201, 168, 106, 0.35); }
