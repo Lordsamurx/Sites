@@ -416,3 +416,64 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
   .hero-frame__spark { top: -11px; }
   .hero-frame::before { left: -10%; right: -10%; }
 }
+
+/* ===== Rodada 4: painel do logo, painel escuro da Lorena e perguntas ===== */
+
+/* Passo 1: lista de itens e marca com órbita */
+.checks { display: flex; flex-direction: column; gap: var(--space-3); margin: var(--space-6) 0 0; padding: var(--space-5) 0 0; border-top: 1px solid var(--border-subtle); list-style: none; }
+.checks li { display: flex; align-items: center; gap: var(--space-3); color: var(--text-strong); font: 500 14px/20px var(--font-sans); }
+.checks svg { flex: none; width: 11px; height: 11px; color: var(--gold-dark); }
+.stack .lc-split:first-child .lc-split__media { background: radial-gradient(circle at 50% 46%, rgba(255, 251, 247, 0.9) 0%, rgba(234, 219, 200, 0.55) 55%, rgba(201, 168, 106, 0.22) 100%); }
+.mono__ring--c { width: 94%; aspect-ratio: 1; opacity: 0.28; border-style: dashed; }
+.mono__ring--a { width: 80%; }
+.mono__disc { width: 62%; background: radial-gradient(circle at 50% 38%, var(--white), var(--beige-light) 70%); box-shadow: var(--shadow-halo), inset 0 0 0 1px rgba(201, 168, 106, 0.35); }
+.lc-split__media .mono__logo { width: 56%; }
+.mono__orbit { position: absolute; width: 80%; aspect-ratio: 1; border-radius: 50%; animation: orbit 40s linear infinite; }
+.mono__orbit i { position: absolute; top: 0; left: 50%; width: 9px; height: 9px; translate: -50% -50%; border-radius: 50%; background: var(--gold-sheen, var(--gold)); box-shadow: 0 0 14px 3px rgba(201, 168, 106, 0.65); }
+.mono__tag { position: absolute; left: 50%; bottom: 7%; translate: -50% 0; padding: 7px 16px; border-radius: 999px; background: rgba(255, 251, 247, 0.7); box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.5); color: var(--gold-ink); font: 500 10px/14px var(--font-sans); letter-spacing: 2.2px; text-transform: uppercase; white-space: nowrap; backdrop-filter: blur(6px); }
+@keyframes orbit { to { rotate: 360deg; } }
+
+/* Painel escuro: marca d'água, brilho dourado, etiqueta na foto e três pontos de orientação */
+.lc-dark { background: radial-gradient(70% 90% at 82% 55%, rgba(201, 168, 106, 0.16), transparent 70%), radial-gradient(50% 60% at 0% 0%, rgba(201, 168, 106, 0.08), transparent 70%), var(--bg-inverse); box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.22); }
+.dark-mark { position: absolute; right: -2%; bottom: -14%; z-index: 0; color: transparent; font: italic 300 clamp(220px, 30vw, 440px)/1 var(--font-display); -webkit-text-stroke: 1px rgba(201, 168, 106, 0.16); pointer-events: none; user-select: none; }
+.dark-photo { z-index: 1; }
+.dark-ring { width: min(460px, 112%); opacity: 0.6; }
+.dark-spark { position: absolute; z-index: 2; top: 2px; left: 50%; width: 16px; height: 16px; translate: -50% -50%; color: var(--accent); filter: drop-shadow(0 0 8px rgba(201, 168, 106, 0.9)); }
+.dark-tag { position: absolute; z-index: 2; left: 50%; bottom: 22px; translate: -50% 0; display: flex; align-items: center; gap: var(--space-3); margin: 0; padding: 10px 20px 10px 16px; border-radius: 999px; background: rgba(43, 30, 22, 0.72); box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.55); backdrop-filter: blur(10px); white-space: nowrap; }
+.dark-tag svg { width: 12px; height: 12px; color: var(--accent); }
+.dark-tag span { display: flex; flex-direction: column; color: var(--text-on-inverse); font: 500 13px/16px var(--font-sans); }
+.dark-tag small { color: var(--accent); font: 500 10px/14px var(--font-sans); letter-spacing: 2px; text-transform: uppercase; }
+.dark-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); max-width: 520px; margin: var(--space-5) 0 0; padding: var(--space-5) 0 0; border-top: 1px solid rgba(201, 168, 106, 0.3); list-style: none; }
+.dark-facts li { display: flex; flex-direction: column; gap: var(--space-2); }
+.dark-facts b { color: var(--accent); font: italic 400 26px/1 var(--font-display); }
+.dark-facts span { color: var(--text-muted-inverse); font: 400 13px/18px var(--font-sans); }
+
+/* Perguntas: título fixo à esquerda, lista numerada em cartão à direita */
+.faq-wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.faq-side { position: sticky; top: 120px; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4); }
+.faq-side__lead { max-width: 380px; margin: 0 0 var(--space-3); color: var(--text-secondary); }
+.faq { counter-reset: q; max-width: none; margin: 0; padding: var(--space-2) var(--space-8); border-radius: var(--radius-xl); background: linear-gradient(165deg, var(--white), var(--cream)); box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.28), 0 30px 60px -40px rgba(125, 95, 51, 0.35); }
+.faq details { counter-increment: q; }
+.faq details:first-child { border-top: 0; }
+.faq details:last-child { border-bottom: 0; }
+.faq summary { justify-content: flex-start; padding: var(--space-5) 0; font-size: 24px; line-height: 28px; }
+.faq summary::before { content: counter(q, decimal-leading-zero); flex: none; width: 34px; color: var(--gold-ink); font: italic 400 20px/1 var(--font-display); }
+.faq summary svg { margin-left: auto; width: 30px; height: 30px; padding: 8px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.55); transition: transform 350ms var(--ease-soft), background 250ms; }
+.faq summary:hover svg, .faq details[open] summary svg { background: var(--beige-light); }
+.faq details[open] summary { color: var(--accent-text); }
+.faq details p { margin: 0 0 var(--space-5); padding-left: 34px; }
+
+@media (max-width: 899px) {
+  .faq-wrap { grid-template-columns: 1fr; gap: var(--space-8); }
+  .faq-side { position: static; }
+  .faq { padding: 0 var(--space-5); }
+  .faq summary { font-size: 21px; line-height: 25px; gap: var(--space-3); }
+  .faq summary::before { width: 26px; font-size: 17px; }
+  .faq details p { padding-left: 26px; }
+  .dark-photo { position: relative; top: auto; right: auto; width: 100%; height: 400px; padding-top: 28px; order: -1; }
+  .dark-facts { grid-template-columns: 1fr; gap: var(--space-3); }
+  .dark-facts li { flex-direction: row; align-items: baseline; gap: var(--space-3); }
+  .mono__tag { bottom: 5%; font-size: 9px; letter-spacing: 1.6px; }
+}
+@media (prefers-reduced-motion: reduce) { .mono__orbit { animation: none; } }
+.dark-facts b, .faq summary::before { font-variant-numeric: lining-nums; }
