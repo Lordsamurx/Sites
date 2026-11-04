@@ -86,8 +86,8 @@
                 <span class="hero-frame__line" aria-hidden="true"></span>
                 <svg class="hero-frame__spark" aria-hidden="true"><use href="#i-spark"/></svg>
                 <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
-                  <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="720" height="900" fetchpriority="high">
-                  <canvas id="hero-canvas" width="720" height="900" aria-hidden="true"></canvas>
+                  <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="800" height="900" fetchpriority="high">
+                  <canvas id="hero-canvas" width="800" height="900" aria-hidden="true"></canvas>
                 </div>
               </div>
               <div class="hero-toasts" aria-hidden="true">
@@ -424,7 +424,7 @@
 
   // Hero: a rolagem conduz uma sequência de quadros (canvas). Sem <video>: sem travar em seek e funciona no Safari/iOS.
   (() => {
-    const N = 99, CUTS = new Set([26, 50, 75]), track = document.getElementById("hero-track"), arch = document.getElementById("hero-arch");
+    const N = 84, CUTS = new Set([11, 35, 60]), track = document.getElementById("hero-track"), arch = document.getElementById("hero-arch");
     const cv = document.getElementById("hero-canvas"), ctx = cv.getContext("2d");
     const toasts = [...document.querySelectorAll(".hero-toasts .float")], hint = document.querySelector(".hero-hint");
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -447,7 +447,7 @@
       const vh = innerHeight;
       if (wide.matches) { const r = track.getBoundingClientRect(); return Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - vh))); }
       const r = arch.getBoundingClientRect();                       // celular: sem trilho fixo; vale a passagem do arco pela tela
-      return Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (vh * 0.6 + r.height)));
+      return Math.min(1, Math.max(0, (vh * 0.5 - r.top) / (vh * 0.4 + r.height)));
     }
     function notes(p) {
       const k = p < 0.05 ? -1 : p < 0.36 ? 0 : p < 0.68 ? 1 : 2;   // uma notificação por vez, conforme a história avança
@@ -468,7 +468,7 @@
     const later = () => ("requestIdleCallback" in window ? requestIdleCallback(rest, { timeout: 1500 }) : setTimeout(rest, 200));
     load(0).then(() => { paint(0); if (document.readyState === "complete") later(); else addEventListener("load", later, { once: true }); });
 
-    if (reduce) { toasts[0].classList.add("is-on"); hint.classList.add("is-off"); load(60).then(() => paint(60 / (N - 1))); return; }
+    if (reduce) { toasts[0].classList.add("is-on"); hint.classList.add("is-off"); load(0).then(() => paint(0)); return; }
     const on = () => { target = progress(); notes(target); };
     addEventListener("scroll", on, { passive: true }); addEventListener("resize", on); on(); cur = target;
     requestAnimationFrame(tick);

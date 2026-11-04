@@ -397,7 +397,7 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 @media (min-width: 900px) and (max-height: 760px) { .hero-hint { display: none; } .hero .lc-hero__content { gap: var(--space-5); } }
 
 /* Moldura do rosto: arco com fios dourados concêntricos, brilho atrás e sombra suave */
-.hero-frame { position: relative; height: min(100%, 620px); aspect-ratio: 4 / 5; }
+.hero-frame { position: relative; height: min(100%, 620px); aspect-ratio: 8 / 9; }
 .hero-frame::before { content: ""; position: absolute; z-index: -1; left: -22%; right: -22%; top: -10%; height: 85%; border-radius: 50%; background: radial-gradient(closest-side, rgba(201, 168, 106, 0.30), rgba(201, 168, 106, 0.08) 60%, transparent 100%); pointer-events: none; }
 .hero-frame__line, .hero-frame__line::after { position: absolute; border: 1px solid var(--gold); border-bottom: 0; border-radius: 999px 999px 0 0; pointer-events: none; }
 .hero-frame__line { inset: -14px -14px 0; opacity: 0.75; }
@@ -544,3 +544,27 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 /* Hero: quadro estático e arco mais nítidos (quadros em 720×900, o primeiro em 1080×1350) */
 .hero-arch img, .hero-arch canvas { image-rendering: auto; }
 .hero-arch { box-shadow: 0 40px 70px -40px rgba(125, 95, 51, 0.55), 0 0 0 1px rgba(201, 168, 106, 0.35); }
+
+/* ===== Rodada 7: balões do hero em ouro, hover do botão em dourado claro, foto da Lorena emoldurada ===== */
+.hero-toasts .lc-toast { min-width: 288px; gap: var(--space-4); padding: 14px 22px 14px 14px; border-radius: 18px; background: linear-gradient(135deg, #fbf1d6 0%, #f0dcab 48%, #e3c88c 100%); box-shadow: 0 0 36px rgba(201, 168, 106, 0.6), 0 18px 34px -14px rgba(125, 95, 51, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.85); }
+.hero-toasts .lc-toast::before { background: linear-gradient(135deg, #8a6a38 0%, rgba(255, 244, 214, 0.9) 50%, #8a6a38 100%); padding: 1.5px; }
+.hero-toasts .lc-toast::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%); translate: -120% 0; animation: lc-sheen 4.8s ease-in-out infinite; pointer-events: none; }
+.hero-toasts .lc-toast__icon { width: 46px; height: 46px; border-radius: 14px; background: linear-gradient(145deg, #4a3322, #2b1e16); color: #f0dcab; box-shadow: 0 6px 14px -4px rgba(43, 30, 22, 0.6), inset 0 0 0 1px rgba(230, 207, 159, 0.55); }
+.hero-toasts .lc-toast__icon svg { width: 20px; height: 20px; filter: drop-shadow(0 0 6px rgba(240, 220, 171, 0.9)); }
+.hero-toasts .lc-toast__title { color: #5e4524; font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: 2px; }
+.hero-toasts .lc-toast__sub { color: var(--brown); font-size: 15px; line-height: 20px; font-weight: 500; }
+@media (max-width: 899px) { .hero-toasts .lc-toast { min-width: 0; padding: 10px 16px 10px 10px; } .hero-toasts .lc-toast__icon { width: 38px; height: 38px; } .hero-toasts .lc-toast__sub { font-size: 13px; line-height: 18px; } }
+@media (prefers-reduced-motion: reduce) { .hero-toasts .lc-toast::after { animation: none; } }
+
+/* Botão sólido: no hover vira um dourado mais claro e luminoso, texto marrom legível */
+.lc-btn--solid:hover, .lc-btn--solid:focus-visible { background-image: linear-gradient(135deg, #f6e7c2 0%, #e9cf94 55%, #dcb878 100%); background-color: #e9cf94; border-color: #b8935a; color: var(--brown); box-shadow: 0 0 28px rgba(230, 207, 159, 0.8), 0 12px 24px -12px rgba(125, 95, 51, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.7); animation: none; }
+
+/* Foto da Lorena: cartão-arco menor e emoldurado (a foto tem só 546 px; menor fica mais nítida) */
+.dark-photo { top: 40px; bottom: 40px; align-items: center; }
+.dark-ring { top: 50%; translate: -50% -50%; width: min(440px, 118%); }
+.dark-spark { top: 4px; }
+.dark-arch { height: auto; width: min(330px, 86%); border-radius: 999px 999px 28px 28px; background: var(--cream); box-shadow: 0 0 0 7px rgba(43, 30, 22, 0.9), 0 0 0 8px rgba(201, 168, 106, 0.85), 0 28px 60px -20px rgba(0, 0, 0, 0.7), 0 0 70px rgba(201, 168, 106, 0.2); }
+.dark-arch img { height: auto; aspect-ratio: 546 / 591; image-rendering: auto; }
+.dark-tag { bottom: 8px; }
+@media (min-width: 1500px) { .dark-arch { width: min(380px, 86%); } .dark-ring { width: min(500px, 124%); } }
+@media (max-width: 899px) { .dark-photo { height: auto; padding-block: 36px 8px; } .dark-arch { width: min(300px, 78%); } .dark-ring { width: min(340px, 90%); } .dark-tag { bottom: 0; } }

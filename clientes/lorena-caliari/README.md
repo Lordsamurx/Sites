@@ -7,7 +7,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `site/index.html` — página (HTML + JS inline no final).
 - `site/css/fonts.css` (fontes hospedadas no site), `tokens.css` (espelho de `tokens.json`), `components.css` (cópia de `bundle.css`, sem o `@import` do Google Fonts), `site.css` (layout da página).
 - `site/assets/fonts/` — Cormorant Garamond (normal e itálico) e Manrope, WOFF2 variáveis, subconjunto latino (licença SIL OFL).
-- `site/assets/frames/` — 99 quadros WebP do hero (recortes 4:5 do vídeo, sem a piscada; ampliados e levemente nitidificados para 720×900, o primeiro em 1080×1350. Se regenerar com OpenCV, use caminho relativo: imwrite falha em silêncio com "Á" no caminho).
+- `site/assets/frames/` — 84 quadros WebP do hero (recortes 8:9 do vídeo, a partir do quadro 72, sem a piscada; ampliados e levemente nitidificados para 800×900, o primeiro em 1200×1350. Se regenerar com OpenCV, use caminho relativo: imwrite falha em silêncio com "Á" no caminho).
 - `site/assets/stills/` — recortes quadrados do vídeo para cartões e painéis.
 - `site/assets/logo-*.png` — logo com fundo transparente (recorte automático do cartão original 260×164). Masters; a página usa as versões `.webp` redimensionadas.
 - `site/assets/lorena.png` — master da foto; a página usa `lorena.webp`. `favicon.png` vem do símbolo dourado.
@@ -22,7 +22,7 @@ Lighthouse (servidor local, sem compressão): celular 98, desktop 100; acessibil
 - Se mudar os pesos ou estilos das fontes no design system, atualizar `css/fonts.css` e `assets/fonts/`.
 
 ## Como o hero funciona
-Trilho de 340vh com palco `position: sticky`; a rolagem conduz os quadros num `<canvas>` (sem `<video>`, evita travar em seek e funciona no iOS). Mistura entre quadros só dentro da mesma cena (`CUTS` no script). No celular não há trilho fixo.
+Trilho de 340vh (84 quadros; `N` e `CUTS` no script) com palco `position: sticky`; a rolagem conduz os quadros num `<canvas>` (sem `<video>`, evita travar em seek e funciona no iOS). Mistura entre quadros só dentro da mesma cena (`CUTS` no script). No celular não há trilho fixo.
 
 ## Regras do design system a respeitar
 Dourado `gold` não é cor de texto sobre claro (usar `gold-ink`). Títulos de painel em CAIXA ALTA com uma palavra em itálico dourado. Botão é sempre pílula com seta. Sem emoji. Ver `design-system/project/README.md`.
