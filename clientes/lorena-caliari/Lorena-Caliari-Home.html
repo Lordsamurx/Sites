@@ -802,6 +802,29 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 .dark-tag { bottom: 8px; }
 @media (min-width: 1500px) { .dark-arch { width: min(380px, 86%); } .dark-ring { width: min(500px, 124%); } }
 @media (max-width: 899px) { .dark-photo { height: auto; padding-block: 36px 8px; } .dark-arch { width: min(300px, 78%); } .dark-ring { width: min(340px, 90%); } .dark-tag { bottom: 0; } }
+
+/* ===== Rodada 8: card do mapa no rodapé (personalizado; o mapa do Google entra quando houver endereço) ===== */
+.foot__cta { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(32px, 5vw, 80px); }
+.foot__cta-main { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-8); }
+.foot__cta-main .foot__cta-actions { flex: none; }
+.map { position: relative; display: grid; grid-template-columns: 1fr; overflow: hidden; border-radius: var(--radius-xl); background: #241a13; box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.65), 0 0 60px rgba(201, 168, 106, 0.1); }
+.map__canvas { position: relative; min-height: 250px; overflow: hidden; }
+.map__art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map__canvas iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: sepia(0.55) saturate(0.75) brightness(0.8) contrast(1.05) hue-rotate(-8deg); }
+.map__pin { position: absolute; left: 50%; top: 50%; width: 34px; height: 44px; translate: -50% -100%; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5)); }
+.map__pin svg { width: 100%; height: 100%; }
+.map__pin i { position: absolute; left: 50%; bottom: -6px; width: 14px; height: 14px; translate: -50% 50%; border-radius: 50%; background: rgba(240, 220, 171, 0.55); animation: map-pulse 2.6s ease-out infinite; }
+@keyframes map-pulse { from { scale: 0.6; opacity: 0.9; } to { scale: 4.2; opacity: 0; } }
+.map__canvas:has(iframe) .map__pin { display: none; }
+.map__info { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-6) var(--space-8) var(--space-8); background: linear-gradient(180deg, rgba(43, 30, 22, 0.55), rgba(43, 30, 22, 0.98)); }
+.map__title { margin: 0; color: var(--text-on-inverse); font: 300 34px/38px var(--font-display); }
+.map__addr { margin: 0 0 var(--space-3); color: var(--text-muted-inverse); font: 400 15px/22px var(--font-sans); }
+.map__btn[aria-disabled="true"] { opacity: 0.55; pointer-events: none; }
+@media (max-width: 899px) { .foot__cta { grid-template-columns: 1fr; } .map__canvas { min-height: 200px; } .map__info { padding: var(--space-5) var(--space-6) var(--space-6); } .map__title { font-size: 28px; line-height: 32px; } }
+@media (prefers-reduced-motion: reduce) { .map__pin i { animation: none; } }
+.foot .map__title { font: 300 36px/40px var(--font-display); letter-spacing: 0; text-transform: none; color: var(--text-on-inverse); }
+.foot .map__title .lc-hl { font-style: italic; color: var(--accent); }
+@media (max-width: 899px) { .foot .map__title { font-size: 30px; line-height: 34px; } }
 </style>
 </head>
 <body class="in-hero">
@@ -1115,12 +1138,13 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 <footer class="foot" aria-labelledby="t-cta">
   <div class="container">
     <div class="foot__cta">
-      <div class="foot__cta-text">
+      <div class="foot__cta-main">
+        <div class="foot__cta-text">
         <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Vamos conversar</p>
         <h2 class="foot__title" id="t-cta">Pronta para <span class="lc-hl">cuidar</span> de você?</h2>
         <p class="foot__lead">Agende uma avaliação e descubra o que a sua pele realmente precisa.</p>
       </div>
-      <div class="foot__cta-actions">
+        <div class="foot__cta-actions">
         <a class="lc-btn lc-btn--solid" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação.">
           <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
@@ -1128,6 +1152,36 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
           <span>Ver tratamentos</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
       </div>
+      </div>
+
+      <!-- Mapa: card no estilo da marca. Preencha ADDRESS no script e o mapa do Google entra aqui, com filtro dourado -->
+      <aside class="map" id="mapa" aria-labelledby="t-mapa">
+        <div class="map__canvas" id="map-canvas">
+          <svg class="map__art" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2a1e"/><stop offset="1" stop-color="#241a13"/></linearGradient></defs>
+            <rect width="480" height="300" fill="url(#mg)"/>
+            <g fill="none" stroke="#c9a86a" stroke-linecap="round">
+              <path d="M-10 210 C 90 190, 150 120, 250 130 S 420 90, 500 60" stroke-width="7" opacity=".28"/>
+              <path d="M60 -10 C 80 80, 150 140, 170 310" stroke-width="6" opacity=".22"/>
+              <path d="M300 -10 C 290 80, 330 160, 420 310" stroke-width="6" opacity=".22"/>
+              <path d="M-10 90 L 500 170" stroke-width="3" opacity=".2"/>
+              <path d="M-10 270 L 500 230" stroke-width="3" opacity=".16"/>
+              <path d="M210 -10 L 230 310" stroke-width="3" opacity=".16"/>
+              <path d="M120 40 L 400 20 M 100 250 L 380 290" stroke-width="2" opacity=".14"/>
+            </g>
+            <g fill="#c9a86a" opacity=".1"><rect x="262" y="150" width="70" height="44" rx="6"/><rect x="92" y="150" width="56" height="60" rx="6"/><rect x="340" y="196" width="80" height="40" rx="6"/><rect x="30" y="40" width="64" height="40" rx="6"/></g>
+          </svg>
+          <span class="map__pin" aria-hidden="true"><i></i><svg viewBox="0 0 24 32"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0dcab"/><stop offset="1" stop-color="#b8935a"/></linearGradient></defs><path d="M12 0C5.4 0 0 5.2 0 11.7 0 20 12 32 12 32s12-12 12-20.3C24 5.2 18.6 0 12 0Z" fill="url(#pg)"/><circle cx="12" cy="11.5" r="4.4" fill="#2b1e16"/></svg></span>
+        </div>
+        <div class="map__info">
+          <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Onde estamos</p>
+          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">nos visitar</span></h3>
+          <p class="map__addr" id="map-addr">Endereço em breve.</p>
+          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" href="#" target="_blank" rel="noopener" aria-disabled="true">
+            <span>Como chegar</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+      </aside>
     </div>
 
     <div class="foot__grid">
@@ -1173,6 +1227,17 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 <script>
   // TODO: trocar pelo número real da Lorena (DDI+DDD+número, só dígitos)
   const WA_NUMBER = "5500000000000";
+  // Endereço da clínica (a confirmar com a Lorena). Preenchido, o card do rodapé mostra o mapa do Google e o botão "Como chegar".
+  const ADDRESS = "";
+  (() => {
+    if (!ADDRESS) return;
+    const q = encodeURIComponent(ADDRESS), link = document.getElementById("map-link"), box = document.getElementById("map-canvas");
+    document.getElementById("map-addr").textContent = ADDRESS;
+    link.href = `https://www.google.com/maps/search/?api=1&query=${q}`; link.removeAttribute("aria-disabled");
+    const f = document.createElement("iframe");
+    f.src = `https://www.google.com/maps?q=${q}&output=embed`; f.title = "Mapa com a localização da clínica"; f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
+    box.replaceChildren(f);
+  })();
   document.querySelectorAll("[data-wa]").forEach((a) => {
     a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(a.dataset.wa)}`;
     a.target = "_blank"; a.rel = "noopener";

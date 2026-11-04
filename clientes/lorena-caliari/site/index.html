@@ -330,12 +330,13 @@
 <footer class="foot" aria-labelledby="t-cta">
   <div class="container">
     <div class="foot__cta">
-      <div class="foot__cta-text">
+      <div class="foot__cta-main">
+        <div class="foot__cta-text">
         <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Vamos conversar</p>
         <h2 class="foot__title" id="t-cta">Pronta para <span class="lc-hl">cuidar</span> de você?</h2>
         <p class="foot__lead">Agende uma avaliação e descubra o que a sua pele realmente precisa.</p>
       </div>
-      <div class="foot__cta-actions">
+        <div class="foot__cta-actions">
         <a class="lc-btn lc-btn--solid" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação.">
           <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
@@ -343,6 +344,36 @@
           <span>Ver tratamentos</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
         </a>
       </div>
+      </div>
+
+      <!-- Mapa: card no estilo da marca. Preencha ADDRESS no script e o mapa do Google entra aqui, com filtro dourado -->
+      <aside class="map" id="mapa" aria-labelledby="t-mapa">
+        <div class="map__canvas" id="map-canvas">
+          <svg class="map__art" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2a1e"/><stop offset="1" stop-color="#241a13"/></linearGradient></defs>
+            <rect width="480" height="300" fill="url(#mg)"/>
+            <g fill="none" stroke="#c9a86a" stroke-linecap="round">
+              <path d="M-10 210 C 90 190, 150 120, 250 130 S 420 90, 500 60" stroke-width="7" opacity=".28"/>
+              <path d="M60 -10 C 80 80, 150 140, 170 310" stroke-width="6" opacity=".22"/>
+              <path d="M300 -10 C 290 80, 330 160, 420 310" stroke-width="6" opacity=".22"/>
+              <path d="M-10 90 L 500 170" stroke-width="3" opacity=".2"/>
+              <path d="M-10 270 L 500 230" stroke-width="3" opacity=".16"/>
+              <path d="M210 -10 L 230 310" stroke-width="3" opacity=".16"/>
+              <path d="M120 40 L 400 20 M 100 250 L 380 290" stroke-width="2" opacity=".14"/>
+            </g>
+            <g fill="#c9a86a" opacity=".1"><rect x="262" y="150" width="70" height="44" rx="6"/><rect x="92" y="150" width="56" height="60" rx="6"/><rect x="340" y="196" width="80" height="40" rx="6"/><rect x="30" y="40" width="64" height="40" rx="6"/></g>
+          </svg>
+          <span class="map__pin" aria-hidden="true"><i></i><svg viewBox="0 0 24 32"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f0dcab"/><stop offset="1" stop-color="#b8935a"/></linearGradient></defs><path d="M12 0C5.4 0 0 5.2 0 11.7 0 20 12 32 12 32s12-12 12-20.3C24 5.2 18.6 0 12 0Z" fill="url(#pg)"/><circle cx="12" cy="11.5" r="4.4" fill="#2b1e16"/></svg></span>
+        </div>
+        <div class="map__info">
+          <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Onde estamos</p>
+          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">nos visitar</span></h3>
+          <p class="map__addr" id="map-addr">Endereço em breve.</p>
+          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" href="#" target="_blank" rel="noopener" aria-disabled="true">
+            <span>Como chegar</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+      </aside>
     </div>
 
     <div class="foot__grid">
@@ -388,6 +419,17 @@
 <script>
   // TODO: trocar pelo número real da Lorena (DDI+DDD+número, só dígitos)
   const WA_NUMBER = "5500000000000";
+  // Endereço da clínica (a confirmar com a Lorena). Preenchido, o card do rodapé mostra o mapa do Google e o botão "Como chegar".
+  const ADDRESS = "";
+  (() => {
+    if (!ADDRESS) return;
+    const q = encodeURIComponent(ADDRESS), link = document.getElementById("map-link"), box = document.getElementById("map-canvas");
+    document.getElementById("map-addr").textContent = ADDRESS;
+    link.href = `https://www.google.com/maps/search/?api=1&query=${q}`; link.removeAttribute("aria-disabled");
+    const f = document.createElement("iframe");
+    f.src = `https://www.google.com/maps?q=${q}&output=embed`; f.title = "Mapa com a localização da clínica"; f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
+    box.replaceChildren(f);
+  })();
   document.querySelectorAll("[data-wa]").forEach((a) => {
     a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(a.dataset.wa)}`;
     a.target = "_blank"; a.rel = "noopener";
