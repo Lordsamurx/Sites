@@ -53,6 +53,8 @@
   <symbol id="i-arrow" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5 15 15 5M7 5h8v8"/></symbol>
   <symbol id="i-plus" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M10 3v14M3 10h14"/></symbol>
   <symbol id="i-menu" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M3 7h14M3 13h14"/></symbol>
+  <symbol id="i-close" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M5 5l10 10M15 5 5 15"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/></g><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></symbol>
 </svg>
 
@@ -65,14 +67,16 @@
         <span class="brand__tag">Estética avançada</span>
       </span>
     </a>
+    <nav class="nav__menu" aria-label="Principal">
     <ul class="nav__links" id="menu">
       <li><a href="#cuidado">Cuidado</a></li>
       <li><a href="#tratamentos">Tratamentos</a></li>
       <li><a href="#lorena">A Lorena</a></li>
       <li><a href="#duvidas">Dúvidas</a></li>
     </ul>
+    </nav>
     <a class="lc-btn lc-btn--solid lc-btn--sm nav__cta" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação.">
-      <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+      <span>Agendar<span class="nav__cta-long"> avaliação</span></span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
     </a>
     <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><svg aria-hidden="true"><use href="#i-menu"/></svg></button>
   </div>
@@ -328,6 +332,17 @@
     </div>
   </section>
 
+  <!-- Depoimentos: só aparece quando houver depoimentos reais em DEPOIMENTOS (fim da página). Enquanto a lista estiver vazia, a seção fica escondida. -->
+  <section class="section quotes-sec" id="depoimentos" aria-labelledby="t-depo" hidden>
+    <div class="container">
+      <div class="section__head reveal">
+        <p class="lc-overline lc-overline--center"><svg aria-hidden="true"><use href="#i-spark"/></svg>Depoimentos</p>
+        <h2 class="lc-title" id="t-depo">Quem já <span class="lc-hl">cuidou</span> comigo</h2>
+      </div>
+      <div class="quotes" id="depo-list"></div>
+    </div>
+  </section>
+
   <!-- Dúvidas -->
   <section class="section section--tint" id="duvidas" aria-labelledby="t-duvidas">
     <div class="container faq-wrap">
@@ -392,9 +407,9 @@
         </div>
         <div class="map__info">
           <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Onde estamos</p>
-          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">nos visitar</span></h3>
+          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">me visitar</span></h3>
           <p class="map__addr" id="map-addr">Endereço em breve.</p>
-          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" href="#" target="_blank" rel="noopener" aria-disabled="true">
+          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" role="link" aria-disabled="true">
             <span>Como chegar</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>
         </div>
@@ -419,7 +434,7 @@
         <h3>Contato</h3>
         <ul>
           <li><a class="foot__chip" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação."><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a></li>
-          <li><a class="foot__chip" href="#"><svg aria-hidden="true"><use href="#i-spark"/></svg>Instagram</a></li>
+          <li id="insta-item" hidden><a class="foot__chip" id="insta-link" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-insta"/></svg>Instagram</a></li>
         </ul>
       </div>
     </div>
@@ -427,51 +442,93 @@
     <p class="foot__mark" aria-hidden="true">Lorena Caliari</p>
 
     <div class="foot__legal">
-      <span>© 2026 Lorena Caliari Estética Avançada</span>
+      <span>© 2026 Lorena Caliari Estética Avançada<!-- TODO (Lorena): "· Farmacêutica CRF-UF 00000" com o número real do registro --></span>
       <a class="foot__top" href="#topo" aria-label="Voltar ao topo"><svg aria-hidden="true" style="transform:rotate(-45deg)"><use href="#i-arrow"/></svg></a>
     </div>
   </div>
 </footer>
 
 <!-- Desktop: pílula de vidro. Mobile: barra fixa de ação -->
+<aside class="quick" aria-label="Agendamento rápido">
 <div class="wa">
   <a class="lc-glass" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação." aria-label="Falar no WhatsApp"><svg aria-hidden="true"><use href="#i-wa"/></svg><span>Falar no WhatsApp</span></a>
 </div>
 <div class="dock">
   <a class="lc-btn lc-btn--solid lc-btn--block" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação."><span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
 </div>
+</aside>
 
 <script>
-  // TODO: trocar pelo número real da Lorena (DDI+DDD+número, só dígitos)
-  const WA_NUMBER = "5500000000000";
-  // Endereço da clínica (a confirmar com a Lorena). Preenchido, o card do rodapé mostra o mapa do Google e o botão "Como chegar".
+  // ===== Dados que dependem da Lorena (ver "Pendências" no README) =====
+  // WhatsApp: DDI + DDD + número, só dígitos. TEMPORÁRIO: número de teste do Samuel; trocar pelo da Lorena antes de publicar.
+  const WA_NUMBER = "5531986729542";
+  // Instagram: URL completa do perfil (https://www.instagram.com/usuario/). Vazio = o botão do rodapé fica escondido.
+  const INSTAGRAM_URL = "";
+  // Endereço da clínica. Preenchido, o card do rodapé mostra o mapa do Google e ativa o botão "Como chegar".
   const ADDRESS = "";
-  (() => {
-    if (!ADDRESS) return;
-    const q = encodeURIComponent(ADDRESS), link = document.getElementById("map-link"), box = document.getElementById("map-canvas");
-    document.getElementById("map-addr").textContent = ADDRESS;
-    link.href = `https://www.google.com/maps/search/?api=1&query=${q}`; link.removeAttribute("aria-disabled");
-    const f = document.createElement("iframe");
-    f.src = `https://www.google.com/maps?q=${q}&output=embed`; f.title = "Mapa com a localização da clínica"; f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
-    box.replaceChildren(f);
-  })();
+  // Depoimentos REAIS, com autorização por escrito de cada paciente. Vazio = a seção inteira fica escondida.
+  // Formato: { nome: "Ana P.", texto: "…", origem: "Google" }   (nome pode ser só as iniciais; origem é opcional)
+  const DEPOIMENTOS = [];
+
+  // WhatsApp: com número válido, todo [data-wa] vira link do wa.me com a mensagem pronta; inválido, os botões ficam desativados
+  const WA_OK = /^55\d{10,11}$/.test(WA_NUMBER);
   document.querySelectorAll("[data-wa]").forEach((a) => {
-    a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(a.dataset.wa)}`;
-    a.target = "_blank"; a.rel = "noopener";
+    if (WA_OK) {
+      a.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(a.dataset.wa)}`;
+      a.target = "_blank"; a.rel = "noopener";
+    } else {
+      a.removeAttribute("href"); a.setAttribute("role", "link"); a.setAttribute("aria-disabled", "true"); a.title = "WhatsApp em breve";
+    }
   });
 
-  // Barra: ganha vidro ao rolar; menu no mobile
+  // Instagram (só com URL de perfil válida)
+  if (/^https:\/\/(www\.)?instagram\.com\/[A-Za-z0-9._]+\/?$/.test(INSTAGRAM_URL)) {
+    document.getElementById("insta-link").href = INSTAGRAM_URL;
+    document.getElementById("insta-item").hidden = false;
+  }
+
+  // Mapa: sem endereço, o card mostra "Endereço em breve" e "Como chegar" fica sem link
+  if (ADDRESS) {
+    const q = encodeURIComponent(ADDRESS), link = document.getElementById("map-link"), box = document.getElementById("map-canvas");
+    document.getElementById("map-addr").textContent = ADDRESS;
+    link.href = `https://www.google.com/maps/search/?api=1&query=${q}`; link.target = "_blank"; link.rel = "noopener";
+    link.removeAttribute("aria-disabled"); link.removeAttribute("role");
+    const f = document.createElement("iframe");
+    f.src = `https://www.google.com/maps?q=${q}&output=embed`; f.title = "Mapa com a localização do consultório"; f.loading = "lazy"; f.referrerPolicy = "no-referrer-when-downgrade";
+    box.replaceChildren(f);
+  }
+
+  // Depoimentos: monta os cartões com textContent (sem HTML vindo dos dados)
+  (() => {
+    const itens = DEPOIMENTOS.filter((d) => d && typeof d.texto === "string" && d.texto.trim() && typeof d.nome === "string" && d.nome.trim());
+    if (!itens.length) return;
+    const list = document.getElementById("depo-list");
+    itens.forEach((d, i) => {
+      const fig = document.createElement("figure"); fig.className = "quote reveal"; fig.style.transitionDelay = `${(i % 3) * 80}ms`;
+      const bq = document.createElement("blockquote"), p = document.createElement("p"); p.textContent = d.texto.trim(); bq.append(p);
+      const cap = document.createElement("figcaption"), n = document.createElement("span"); n.className = "quote__name"; n.textContent = d.nome.trim(); cap.append(n);
+      if (d.origem) { const o = document.createElement("span"); o.className = "quote__src"; o.textContent = String(d.origem).trim(); cap.append(o); }
+      fig.append(bq, cap); list.append(fig);
+    });
+    document.getElementById("depoimentos").hidden = false;
+  })();
+
+  // Barra: ganha vidro ao rolar; menu no mobile (Esc fecha, clique fora fecha, o rótulo acompanha o estado)
   const nav = document.getElementById("nav");
   const links = document.getElementById("menu");
   const toggle = nav.querySelector(".nav__toggle");
   const onScroll = () => nav.classList.toggle("is-stuck", scrollY > 24);
   onScroll(); addEventListener("scroll", onScroll, { passive: true });
-  toggle.addEventListener("click", () => {
-    const open = links.classList.toggle("is-open");
-    nav.classList.toggle("is-open", open);
-    toggle.setAttribute("aria-expanded", open);
-  });
-  links.addEventListener("click", (e) => { if (e.target.closest("a")) { links.classList.remove("is-open"); nav.classList.remove("is-open"); toggle.setAttribute("aria-expanded", "false"); } });
+  const setMenu = (open) => {
+    links.classList.toggle("is-open", open); nav.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open)); toggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+    toggle.querySelector("use").setAttribute("href", open ? "#i-close" : "#i-menu");
+  };
+  toggle.addEventListener("click", () => setMenu(!links.classList.contains("is-open")));
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && links.classList.contains("is-open")) { setMenu(false); toggle.focus(); } });
+  document.addEventListener("click", (e) => { if (links.classList.contains("is-open") && !nav.contains(e.target)) setMenu(false); });
+  matchMedia("(min-width: 900px)").addEventListener("change", (m) => { if (m.matches) setMenu(false); });
 
   // Entradas ao rolar
   const els = document.querySelectorAll(".reveal");
@@ -567,7 +624,7 @@
       document.body.classList.toggle("at-foot", foot.getBoundingClientRect().top < innerHeight - 120);
       document.body.classList.toggle("in-hero", hero.getBoundingClientRect().bottom > innerHeight * 0.35);   // pílula e barra do WhatsApp só depois do hero
       let cur = null; for (const el of secs) if (el.getBoundingClientRect().top <= innerHeight * 0.4) cur = el.id;
-      links.forEach((a) => a.classList.toggle("is-current", a === map.get(cur)));
+      links.forEach((a) => { const on = a === map.get(cur); a.classList.toggle("is-current", on); if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
       if (reduce) return;
       panels.forEach((p, i) => {                              // o painel de baixo cobre o de cima: o de cima recua um pouco
         const n = panels[i + 1];
