@@ -17,6 +17,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `tests/smoke.spec.js`, `playwright.config.js`, `package.json` — testes automáticos (ver "Testes").
 - `Lorena-Caliari-Home.html` — a home inteira em um arquivo só (CSS, fontes e imagens embutidos, cerca de 4 MB) para abrir no PC sem servidor. Gerado por `python3 scripts/arquivo-unico.py`; rode de novo sempre que mudar algo em `site/`.
 - `docs/capturas/` — capturas antes/depois da rodada de polimento (não são publicadas com o site).
+- `automacao-whatsapp/` — agente de WhatsApp no n8n (leads, dúvidas, agendamento e cancelamento no Google Agenda). Guia de implantação e pendências no `README.md` da pasta.
 
 ## Dados da cliente (só no script do fim do `index.html`)
 | Constante | Hoje | Efeito |
@@ -70,6 +71,7 @@ Dourado `gold` não é cor de texto sobre claro (usar `gold-ink`). Títulos de p
 
 ## Pendências
 Dependem da Lorena (não inventar; o site está preparado para receber):
+- **Agente de WhatsApp (n8n):** expediente, duração dos procedimentos, políticas, endereço e valores. Lista completa em `automacao-whatsapp/README.md`.
 - **WhatsApp:** `WA_NUMBER` é o número de teste do Samuel. Trocar pelo da Lorena antes de publicar.
 - **Instagram:** `INSTAGRAM_URL` vazio (chip escondido). Depois, acrescentar em `sameAs` no JSON-LD.
 - **Endereço, cidade, horário e telefone:** `ADDRESS` vazio ("Endereço em breve"). No JSON-LD faltam `address`, `telephone` e `openingHoursSpecification` (TODO no comentário acima dele).
