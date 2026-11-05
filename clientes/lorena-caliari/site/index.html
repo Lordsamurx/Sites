@@ -6,7 +6,20 @@
 <title>Lorena Caliari | Estética Avançada</title>
 <meta name="description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
 <meta name="theme-color" content="#fffbf7">
+<meta name="robots" content="index, follow">
+<!-- TODO (URL final): descomentar quando o domínio estiver definido.
+<link rel="canonical" href="https://DOMINIO-FINAL/">
+<meta property="og:url" content="https://DOMINIO-FINAL/">
+<meta property="og:image" content="https://DOMINIO-FINAL/assets/og.jpg">
+-->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Lorena Caliari Estética Avançada">
+<meta property="og:title" content="Lorena Caliari | Estética Avançada">
+<meta property="og:description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
+<meta name="twitter:card" content="summary">
 <script>
+  document.documentElement.classList.add("js");   // sem JS, nada fica escondido à espera das animações de entrada
   // Preload das fontes só quando servido por http(s): aberto direto do disco (file://) o Chrome bloqueia o preload por CORS; as fontes carregam pelo CSS do mesmo jeito.
   if (location.protocol !== "file:") ["cormorant-garamond", "cormorant-garamond-italic", "manrope"].forEach((f) => {
     const l = document.createElement("link"); l.rel = "preload"; l.as = "font"; l.type = "font/woff2"; l.crossOrigin = ""; l.href = `assets/fonts/${f}.woff2`; document.head.appendChild(l);
@@ -18,6 +31,18 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/site.css">
+<!-- Dados estruturados: só o que é confirmado. TODO com a Lorena: "url" (domínio final), "telephone", "address"
+     (PostalAddress), "openingHoursSpecification", "image" (URL absoluta) e "sameAs" (Instagram). Não preencher com chute. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  "name": "Lorena Caliari Estética Avançada",
+  "description": "Protocolos de estética avançada pensados para realçar, nunca transformar. Atendimento da farmacêutica Lorena Caliari.",
+  "founder": { "@type": "Person", "name": "Lorena Caliari", "jobTitle": "Farmacêutica" },
+  "knowsAbout": ["Bioestimuladores", "Skinbooster", "Harmonização facial", "Limpeza de pele", "Peeling", "Microagulhamento"]
+}
+</script>
 </head>
 <body class="in-hero">
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
@@ -28,6 +53,7 @@
   <symbol id="i-arrow" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5 15 15 5M7 5h8v8"/></symbol>
   <symbol id="i-plus" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M10 3v14M3 10h14"/></symbol>
   <symbol id="i-menu" viewBox="0 0 20 20"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M3 7h14M3 13h14"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/></g><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></symbol>
 </svg>
 
@@ -40,12 +66,14 @@
         <span class="brand__tag">Estética avançada</span>
       </span>
     </a>
+    <nav class="nav__menu" aria-label="Principal">
     <ul class="nav__links" id="menu">
       <li><a href="#cuidado">Cuidado</a></li>
       <li><a href="#tratamentos">Tratamentos</a></li>
       <li><a href="#lorena">A Lorena</a></li>
       <li><a href="#duvidas">Dúvidas</a></li>
     </ul>
+    </nav>
     <a class="lc-btn lc-btn--solid lc-btn--sm nav__cta" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação.">
       <span>Agendar avaliação</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
     </a>
@@ -62,8 +90,8 @@
         <div class="container hero-wrap">
           <div class="lc-hero">
             <div class="lc-hero__content">
-              <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Farmacêutica · Estética avançada</p>
-              <h1 class="lc-hero__title" id="t-hero">Beleza que <span class="lc-hl">respeita</span> o seu rosto</h1>
+              <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Farmacêutica<span class="hide-xs">· Estética avançada</span></p>
+              <h1 class="lc-hero__title" id="t-hero">Beleza que <span class="lc-hl">respeita</span> o&nbsp;seu rosto</h1>
               <div class="lc-hero__lead">
                 <p class="lc-hero__sub">Protocolos de estética avançada pensados para realçar, nunca transformar.</p>
               </div>
@@ -316,8 +344,8 @@
       </div>
       <div class="faq reveal">
         <details open><summary>Preciso fazer uma avaliação antes?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Sim. Todo protocolo começa por uma avaliação completa da pele e do rosto, para indicar apenas o que faz sentido para você.</p></details>
-        <details><summary>O resultado fica natural?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Esse é o objetivo de tudo o que fazemos: realçar, nunca transformar. O planejamento é individual e o resultado se constrói aos poucos.</p></details>
-        <details><summary>Como agendo o meu horário?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Pelo WhatsApp. É só tocar em qualquer botão de agendamento e a mensagem já vai pronta.</p></details>
+        <details><summary>O resultado fica natural?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>É o objetivo de tudo o que eu faço: realçar, nunca transformar. O planejamento é individual e o resultado se constrói aos poucos, no tempo da sua pele.</p></details>
+        <details><summary>Como agendo o meu horário?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Pelo WhatsApp. Toque em qualquer botão de agendamento: a conversa abre com a mensagem pronta e eu respondo para combinar o melhor horário.</p></details>
         <details><summary>Posso tirar dúvidas antes de decidir?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Pode e deve. Na avaliação eu explico o que cada procedimento faz, o que esperar e quando ele não vale a pena, sem pressa para fechar nada.</p></details>
         <details><summary>Como funciona o acompanhamento?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Você recebe orientação clara antes e depois de cada etapa, e pode falar comigo pelo WhatsApp sempre que surgir uma dúvida.</p></details>
         <details><summary>Quais tratamentos estão disponíveis?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Bioestimuladores, skinbooster, harmonização facial, limpeza de pele, peeling e microagulhamento. A indicação certa depende da avaliação.</p></details>
@@ -347,7 +375,7 @@
       </div>
 
       <!-- Mapa: card no estilo da marca. Preencha ADDRESS no script e o mapa do Google entra aqui, com filtro dourado -->
-      <aside class="map" id="mapa" aria-labelledby="t-mapa">
+      <div class="map" id="mapa" role="group" aria-labelledby="t-mapa">
         <div class="map__canvas" id="map-canvas">
           <svg class="map__art" viewBox="0 0 480 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
             <defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2a1e"/><stop offset="1" stop-color="#241a13"/></linearGradient></defs>
@@ -367,13 +395,13 @@
         </div>
         <div class="map__info">
           <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Onde estamos</p>
-          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">nos visitar</span></h3>
+          <h3 class="map__title" id="t-mapa">Venha <span class="lc-hl">me visitar</span></h3>
           <p class="map__addr" id="map-addr">Endereço em breve.</p>
-          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" href="#" target="_blank" rel="noopener" aria-disabled="true">
+          <a class="lc-btn lc-btn--on-dark map__btn" id="map-link" aria-disabled="true">
             <span>Como chegar</span><svg class="lc-btn__icon" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>
         </div>
-      </aside>
+      </div>
     </div>
 
     <div class="foot__grid">
@@ -394,7 +422,7 @@
         <h3>Contato</h3>
         <ul>
           <li><a class="foot__chip" href="#" data-wa="Olá, Lorena! Gostaria de agendar uma avaliação."><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a></li>
-          <li><a class="foot__chip" href="#"><svg aria-hidden="true"><use href="#i-spark"/></svg>Instagram</a></li>
+          <li id="ig-item" hidden><a class="foot__chip" id="ig-link"><svg aria-hidden="true"><use href="#i-ig"/></svg>Instagram</a></li>
         </ul>
       </div>
     </div>
@@ -402,6 +430,7 @@
     <p class="foot__mark" aria-hidden="true">Lorena Caliari</p>
 
     <div class="foot__legal">
+      <!-- TODO (Lorena): número do CRF e UF, ex.: "Farmacêutica responsável: Lorena Caliari · CRF-UF 00000". Obrigatório na publicidade de saúde; não publicar sem o número real. -->
       <span>© 2026 Lorena Caliari Estética Avançada</span>
       <a class="foot__top" href="#topo" aria-label="Voltar ao topo"><svg aria-hidden="true" style="transform:rotate(-45deg)"><use href="#i-arrow"/></svg></a>
     </div>
