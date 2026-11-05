@@ -1,0 +1,26 @@
+# n8n local para ver e testar os workflows da Lorena.
+# Subir:     docker compose up -d   (depois de importar, ver README > "Ver no Docker")
+# Abrir:     http://localhost:5678
+# Parar:     docker compose down     (os dados ficam no volume n8n_dados)
+services:
+  n8n:
+    image: n8nio/n8n:2.46.6
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+      - TZ=America/Sao_Paulo
+      - N8N_DEFAULT_LOCALE=en
+      - N8N_SECURE_COOKIE=false       # só para uso local em http://localhost
+      - N8N_DIAGNOSTICS_ENABLED=false
+      - N8N_PERSONALIZATION_ENABLED=false
+      - N8N_PUSH_BACKEND=sse
+      - N8N_LISTEN_ADDRESS=0.0.0.0
+      - N8N_RUNNERS_ENABLED=true
+    volumes:
+      - n8n_dados:/home/node/.n8n
+      - ./workflows:/workflows:ro
+
+volumes:
+  n8n_dados:

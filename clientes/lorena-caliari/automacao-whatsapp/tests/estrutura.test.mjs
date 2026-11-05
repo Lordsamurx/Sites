@@ -52,6 +52,7 @@ test('Ferramentas do agente passam o telefone fixo (não vem da IA)', () => {
   const tools = wf.nodes.filter((n) => n.type.endsWith('toolWorkflow'));
   assert.equal(tools.length, 5);
   for (const t of tools) {
+    assert.match(t.parameters.name || '', /^[a-z_]+$/, `ferramenta sem nome: ${t.name}`);
     const v = t.parameters.workflowInputs.value;
     assert.match(v.telefone, /Situação do lead/);
     assert.doesNotMatch(v.telefone, /fromAI/);

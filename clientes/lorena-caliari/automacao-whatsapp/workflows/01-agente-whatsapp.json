@@ -1,9 +1,10 @@
 {
+  "id": "LorenaAgente0001",
   "name": "Lorena Caliari · 01 Agente de WhatsApp",
   "nodes": [
     {
       "parameters": {
-        "content": "## Agente de WhatsApp · Lorena Caliari Estética Avançada\nRecebe os leads no WhatsApp (API oficial da Meta), registra na planilha, tira dúvidas, consulta a agenda, agenda, remarca e cancela no Google Agenda e chama a Lorena quando precisa.\n\n1. Importe antes o workflow **02 Ferramentas da agenda** e copie o ID dele.\n2. Cole o ID nas 5 ferramentas (consultar_horarios, agendar, listar_meus_agendamentos, cancelar_agendamento, chamar_lorena).\n3. No nó **Normalizar**, troque `LORENA_WHATSAPP` pelo número pessoal da Lorena.\n4. Credenciais: WhatsApp Trigger, WhatsApp, OpenAI, Google Sheets.\n5. Escolha a planilha nos nós de planilha (aba \"Leads\").\n6. Teste com um número separado antes de ativar.\n\nComandos da Lorena (do número pessoal para o número da clínica):\n`#pausar 5531999999999` · `#retomar 5531999999999`",
+        "content": "## Agente de WhatsApp · Lorena Caliari Estética Avançada\nRecebe os leads no WhatsApp (API oficial da Meta), registra na planilha, tira dúvidas, consulta a agenda, agenda, remarca e cancela no Google Agenda e chama a Lorena quando precisa.\n\n1. Importe antes o workflow **02 Ferramentas da agenda** e publique. (No Docker do projeto isso já é feito.)\n2. Importou pela tela? Escolha o workflow 02 de novo nas 5 ferramentas (consultar_horarios, agendar, listar_meus_agendamentos, cancelar_agendamento, chamar_lorena).\n3. No nó **Normalizar**, troque `LORENA_WHATSAPP` pelo número pessoal da Lorena.\n4. Credenciais: WhatsApp Trigger, WhatsApp, OpenAI, Google Sheets.\n5. Escolha a planilha nos nós de planilha (aba \"Leads\").\n6. Teste com um número separado antes de ativar.\n\nComandos da Lorena (do número pessoal para o número da clínica):\n`#pausar 5531999999999` · `#retomar 5531999999999`",
         "width": 700,
         "height": 420,
         "color": 4
@@ -593,10 +594,11 @@
     },
     {
       "parameters": {
+        "name": "consultar_horarios",
         "description": "Consulta os horários livres na agenda da Lorena para um procedimento, num período de até 14 dias. Use antes de oferecer qualquer horário.",
         "workflowId": {
           "__rl": true,
-          "value": "COLE_AQUI_O_ID_DO_WORKFLOW_DE_FERRAMENTAS",
+          "value": "LorenaAgenda0002",
           "mode": "id"
         },
         "workflowInputs": {
@@ -738,10 +740,11 @@
     },
     {
       "parameters": {
+        "name": "agendar",
         "description": "Agenda um horário na agenda da Lorena. Só use depois que a paciente confirmar procedimento, dia e horário.",
         "workflowId": {
           "__rl": true,
-          "value": "COLE_AQUI_O_ID_DO_WORKFLOW_DE_FERRAMENTAS",
+          "value": "LorenaAgenda0002",
           "mode": "id"
         },
         "workflowInputs": {
@@ -883,10 +886,11 @@
     },
     {
       "parameters": {
+        "name": "listar_meus_agendamentos",
         "description": "Lista os próximos agendamentos desta paciente (deste número de WhatsApp), com o evento_id de cada um.",
         "workflowId": {
           "__rl": true,
-          "value": "COLE_AQUI_O_ID_DO_WORKFLOW_DE_FERRAMENTAS",
+          "value": "LorenaAgenda0002",
           "mode": "id"
         },
         "workflowInputs": {
@@ -1025,10 +1029,11 @@
     },
     {
       "parameters": {
+        "name": "cancelar_agendamento",
         "description": "Cancela um agendamento desta paciente. Só use depois que ela confirmar qual agendamento quer cancelar.",
         "workflowId": {
           "__rl": true,
-          "value": "COLE_AQUI_O_ID_DO_WORKFLOW_DE_FERRAMENTAS",
+          "value": "LorenaAgenda0002",
           "mode": "id"
         },
         "workflowInputs": {
@@ -1168,10 +1173,11 @@
     },
     {
       "parameters": {
+        "name": "chamar_lorena",
         "description": "Avisa a Lorena para assumir esta conversa pessoalmente e pausa o assistente para esta paciente.",
         "workflowId": {
           "__rl": true,
-          "value": "COLE_AQUI_O_ID_DO_WORKFLOW_DE_FERRAMENTAS",
+          "value": "LorenaAgenda0002",
           "mode": "id"
         },
         "workflowInputs": {

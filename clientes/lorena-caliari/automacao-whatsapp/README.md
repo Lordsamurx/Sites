@@ -8,6 +8,7 @@ Atendente virtual no WhatsApp da clínica. A Lorena é a única profissional, en
 | `workflows/01-agente-whatsapp.json` | Workflow principal: WhatsApp → planilha de leads → agente de IA → resposta. **É o que fica ativo.** |
 | `workflows/02-ferramentas-agenda.json` | Sub-workflow chamado pelas ferramentas do agente: consultar horários, agendar, listar, cancelar, chamar a Lorena. **Precisa ser publicado** (no n8n 2.x, sub-workflow não publicado não pode ser chamado). |
 | `planilha-leads-modelo.csv` | Cabeçalho da planilha de leads (importar no Google Planilhas, aba `Leads`). |
+| `docker-compose.yml` e `subir-docker.sh` | n8n local no Docker, com os dois workflows já importados e ligados (ver "Ver no Docker"). |
 | `src/` | Código de cada nó "Code" e o prompt do agente. **Edite aqui**, não nos JSON. |
 | `scripts/gerar-workflows.mjs` | Monta os dois JSON a partir de `src/` (`npm run gerar`). |
 | `tests/` | Testes da lógica de agenda, dos comandos e da estrutura dos JSON (`npm test`). |
@@ -45,6 +46,33 @@ Do WhatsApp pessoal dela (o número em `LORENA_WHATSAPP`) para o número da clí
 
 Também dá para mudar `bot_pausado` direto na planilha (`sim` ou vazio).
 
+## Ver no Docker (no seu computador)
+Precisa do Docker Desktop instalado e aberto. Nesta pasta (`clientes/lorena-caliari/automacao-whatsapp`):
+
+```bash
+./subir-docker.sh
+```
+
+No Windows (PowerShell), rode os mesmos três comandos do script:
+
+```bash
+docker compose run --rm --no-deps n8n import:workflow --separate --input=/workflows
+```
+
+```bash
+docker compose run --rm --no-deps n8n publish:workflow --id=LorenaAgenda0002
+```
+
+```bash
+docker compose up -d
+```
+
+Abra http://localhost:5678, crie a conta de dono (fica só no seu computador) e os dois workflows estarão na lista, com as ferramentas do 01 já apontando para o 02 e o 02 publicado. Os triângulos vermelhos que aparecem são as credenciais que ainda faltam escolher (Google, WhatsApp, OpenAI).
+
+- Depois de mudar algo em `src/` e rodar `npm run gerar`, rode `./subir-docker.sh` de novo: ele atualiza os dois workflows (mesmos IDs) e publica o 02. Mudanças feitas na tela do n8n são sobrescritas; exporte antes se quiser guardar.
+- Parar: `docker compose down`. Os dados ficam no volume `n8n_dados`; para apagar tudo: `docker compose down -v`.
+- Para o WhatsApp de verdade, o n8n precisa de um endereço HTTPS público (a Meta não chama `localhost`). Para ver e editar, o Docker local basta.
+
 ## Implantação passo a passo
 
 ### 1. Antes de tudo (com a Lorena)
@@ -58,7 +86,7 @@ Também dá para mudar `bot_pausado` direto na planilha (`sim` ou vazio).
 3. Opcional: crie uma agenda separada "Atendimentos" e cole o ID dela em `agendaId` no nó **Config** (workflow 02).
 
 ### 3. n8n
-1. **Importe o workflow 02** (menu ⋯ > Import from file). Copie o ID dele (o código na URL, depois de `/workflow/`).
+1. **Importe o workflow 02** (menu ⋯ > Import from file). No Docker do projeto isso já é feito.
 2. No workflow 02:
    - nó **Config**: ajuste expediente, durações e regras (estão com valores de EXEMPLO);
    - nós HTTP de agenda: escolha a credencial **Google Calendar OAuth2 API**;
@@ -66,7 +94,7 @@ Também dá para mudar `bot_pausado` direto na planilha (`sim` ou vazio).
    - nó **Pausar assistente**: credencial do Google Sheets e a planilha `Leads`;
    - salve e **publique** (botão *Publish*). Sem isso, o agente recebe o erro "Workflow is not active". Depois de qualquer mudança no 02, publique de novo.
 3. **Importe o workflow 01.** Nele:
-   - nas 5 ferramentas (`consultar_horarios`, `agendar`, `listar_meus_agendamentos`, `cancelar_agendamento`, `chamar_lorena`): selecione o workflow 02 no campo *Workflow* (ou cole o ID). Se os campos não aparecerem, clique em atualizar o esquema de entradas;
+   - nas 5 ferramentas (`consultar_horarios`, `agendar`, `listar_meus_agendamentos`, `cancelar_agendamento`, `chamar_lorena`): se importou pela tela, selecione o workflow 02 no campo *Workflow* (pela linha de comando o ID `LorenaAgenda0002` já vem certo). Se os campos não aparecerem, clique em atualizar o esquema de entradas;
    - nó **Normalizar**: troque `LORENA_WHATSAPP` pelo número pessoal da Lorena (só dígitos, com 55 e DDD);
    - **WhatsApp Trigger**: credencial *WhatsApp OAuth* (App ID e App Secret da Meta);
    - nós **WhatsApp** e **URL do áudio / Baixar áudio**: credencial *WhatsApp API*;
@@ -88,6 +116,7 @@ Os testes automáticos da lógica (sem n8n): `npm install` e `npm test`.
 ### O que já foi verificado
 - Testes da lógica de agenda, comandos, áudio e estrutura dos JSON (`npm test`, 21 testes).
 - Tipos, versões e nomes de parâmetros dos 54 nós conferidos contra o n8n 2.46.6 instalado.
+- Os dois workflows abrem no editor do n8n 2.46.6 no Docker (imagem oficial `n8nio/n8n:2.46.6`), sem nenhum aviso além das credenciais que faltam escolher. Foi assim que apareceu que as ferramentas exigiam o campo *Name* (corrigido).
 - Os dois JSON importam no n8n 2.46.6 (`n8n import:workflow`), e o workflow 02 executou de verdade, chamado por outro workflow, nos caminhos que não precisam de credencial (nome faltando, domingo, data inválida), devolvendo a mensagem certa.
 - Não testado aqui (precisa das contas reais): Google Agenda, Google Planilhas, WhatsApp, OpenAI e o agente conversando. É o que os 3 testes acima cobrem.
 
