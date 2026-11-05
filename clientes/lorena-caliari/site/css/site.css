@@ -144,14 +144,10 @@ a { color: inherit; }
 .dock { display: none; }
 
 /* Entradas: um único deslocamento e duração para todas */
-.reveal { opacity: 0; translate: 0 24px; transition: opacity 700ms var(--ease-soft), translate 700ms var(--ease-soft); }
-.reveal.is-in { opacity: 1; translate: 0 0; }
+/* Só esconde quando o JavaScript está ativo (classe "js" no <html>): sem JS, todo o conteúdo aparece */
+.js .reveal { opacity: 0; translate: 0 24px; transition: opacity 700ms var(--ease-soft), translate 700ms var(--ease-soft); }
+.js .reveal.is-in { opacity: 1; translate: 0 0; }
 .js-off .reveal { opacity: 1; translate: 0 0; }
-
-@media (max-width: 1100px) {
-  .lc-hero__title { font-size: 60px; }
-  .nav__links { gap: var(--space-6); }
-}
 
 @media (max-width: 899px) {
   .container { padding-inline: var(--layout-gutter); }
@@ -208,7 +204,7 @@ a { color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal { opacity: 1; translate: 0 0; transition: none; }
+  .js .reveal { opacity: 1; translate: 0 0; transition: none; }
   .nav, .nav__links a::after, .faq summary svg, .lc-card__more svg { transition: none; }
 }
 
@@ -591,3 +587,125 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 .foot .map__title { font: 300 36px/40px var(--font-display); letter-spacing: 0; text-transform: none; color: var(--text-on-inverse); }
 .foot .map__title .lc-hl { font-style: italic; color: var(--accent); }
 @media (max-width: 899px) { .foot .map__title { font-size: 30px; line-height: 34px; } }
+
+/* ===== Rodada 9: polimento final (auditoria em 320, 375, 768, 1024, 1440 e 1920 px) ===== */
+
+/* Alvos de toque ≥ 44 px e ícones que não encolhem dentro de flex */
+.skip:focus { padding: var(--space-3) var(--space-5); min-height: 44px; display: inline-flex; align-items: center; }
+.nav__toggle, .foot__top, .foot__chip svg, .lc-btn__icon, .textlink svg, .lc-card__more svg { flex: none; }
+.nav__toggle { place-items: center; transition: background-color var(--dur-fast), border-color var(--dur-fast); }
+.nav__toggle:hover { background: var(--beige-light); }
+.textlink { min-height: 44px; padding-top: 22px; }
+.foot nav a { padding-block: 10px; }
+.foot ul { gap: var(--space-1); }
+.foot__chip { margin-block: 2px; }
+
+/* Estados: foco visível em todo controle, toque com leve afundamento, desativado legível */
+.lc-btn { transition: background-color var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast), box-shadow var(--dur-base) var(--ease-soft), scale var(--dur-fast) var(--ease-soft); }
+.lc-btn:active:not([aria-disabled="true"]) { scale: 0.98; }
+.lc-btn[aria-disabled="true"], .foot__chip[aria-disabled="true"], .textlink[aria-disabled="true"], .wa [aria-disabled="true"], .lc-card__title a[aria-disabled="true"] { cursor: not-allowed; }
+.lc-btn[aria-disabled="true"], .foot__chip[aria-disabled="true"], .wa [aria-disabled="true"] { opacity: 0.55; animation: none; }
+.lc-btn[aria-disabled="true"]:hover { scale: none; }
+@media (hover: hover) and (pointer: fine) {
+  .lc-btn--outline[aria-disabled="true"]:hover, .lc-btn--on-dark[aria-disabled="true"]:hover { background: transparent; color: inherit; }
+  .lc-btn[aria-disabled="true"]:hover .lc-btn__icon { transform: none; }
+}
+.textlink:focus-visible, .nav__links a:focus-visible, .faq summary:focus-visible, .foot a:focus-visible, .brand:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 4px; border-radius: var(--radius-sm); }
+.foot a:focus-visible { outline-color: var(--accent); }
+.nav__toggle:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+.lc-card:focus-within { translate: 0 -6px; box-shadow: 0 18px 40px -18px rgba(125, 95, 51, 0.35), inset 0 0 0 1px var(--accent); }
+.lc-card:focus-within .lc-card__layer { transform: scale(1.0625); }
+.lc-card:focus-within .lc-card__more svg { transform: rotate(45deg); }
+.lc-card__title a:focus-visible { outline: none; }
+.textlink { transition: border-color var(--dur-fast), color var(--dur-fast); }
+.textlink:hover { color: var(--accent-text); border-color: var(--accent-text); }
+.foot__top { transition: background-color var(--dur-fast), translate var(--dur-base) var(--ease-spring); }
+@media (hover: hover) { .foot__top:hover { translate: 0 -3px; } }
+
+/* Perguntas: a resposta entra com um leve fade */
+.faq details[open] p { animation: lc-faq-in 420ms var(--ease-soft); }
+@keyframes lc-faq-in { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: 0 0; } }
+
+/* Pílula do WhatsApp (desktop): círculo discreto que abre o rótulo no hover e no foco; não cobre o texto das seções */
+.wa .lc-glass { width: 56px; height: 56px; padding: 0; gap: 0; justify-content: center; overflow: hidden; transition: width 420ms var(--ease-soft), gap 420ms var(--ease-soft), padding 420ms var(--ease-soft), background-color var(--dur-fast); }
+.wa .lc-glass svg { flex: none; width: 20px; height: 20px; }
+.wa .lc-glass span { max-width: 0; opacity: 0; transition: max-width 420ms var(--ease-soft), opacity 300ms; }
+.wa .lc-glass:hover, .wa .lc-glass:focus-visible { width: 230px; gap: var(--space-3); padding: 0 var(--space-6) 0 var(--space-5); }
+.wa .lc-glass:hover span, .wa .lc-glass:focus-visible span { max-width: 180px; opacity: 1; }
+.wa .lc-glass:hover svg { color: var(--brown); }
+.wa .lc-glass[aria-disabled="true"]:hover { width: 56px; gap: 0; padding: 0; background: rgba(255, 251, 247, 0.82); }
+.wa .lc-glass[aria-disabled="true"]:hover span { max-width: 0; opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .wa .lc-glass, .wa .lc-glass span, .faq summary svg, .textlink, .foot__top, .nav__toggle { transition: none; } .faq details[open] p { animation: none; } .lc-btn { transition: none; } .lc-btn:active:not([aria-disabled="true"]) { scale: none; } .foot__top:hover { translate: none; } .lc-card:focus-within { translate: none; } }
+
+/* Legibilidade: nenhum texto abaixo de 11 px */
+.mono__tag { font-size: 11px; letter-spacing: 2px; }
+@media (max-width: 899px) {
+  .lc-overline { font-size: 11px; letter-spacing: 2.6px; }
+  .mono__tag { font-size: 11px; letter-spacing: 1.6px; }
+}
+
+/* Hero entre 900 e 1199 px: texto e arco não se sobrepõem */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .hero .lc-hero__content { max-width: 52%; padding-left: clamp(32px, 5vw, 56px); }
+  .hero .lc-hero__title { font-size: clamp(46px, 5.2vw, 58px); }
+  .hero-stage { right: 4%; width: 42%; }
+  .float--a { left: -10%; } .float--c { left: -8%; }
+  .float--b { right: -4%; }
+  .hero-toasts .lc-toast { min-width: 0; }
+}
+/* Hero em telas largas: título em duas linhas, sem "o" solto */
+@media (min-width: 1200px) { .hero .lc-hero__content { max-width: min(50%, 760px); } }
+
+
+/* Celular estreito (320 a 380 px): cabeçalho, selos e botões cabem na tela */
+.hide-sm { display: inline; }
+@media (max-width: 899px) {
+  .hide-sm { display: none; }
+  .hero__pills { flex-wrap: wrap; }
+  .lc-btn { min-width: min(233px, 100%); max-width: 100%; }
+  .lc-panel__foot, .foot__cta-main, .map__info { min-width: 0; }
+  .foot__mark { font-size: min(8.6vw, 124px); }
+}
+@media (max-width: 380px) {
+  .container { padding-inline: 20px; }
+  .hero .hero-wrap { padding-inline: 8px; }
+  .hero .lc-hero__content { padding-inline: 22px; }
+  .lc-split__copy { padding-inline: 24px; }
+  .lc-dark__copy { padding-inline: 22px; }
+  .map__info { padding-inline: var(--space-5); }
+  .lc-btn { gap: var(--space-2); padding: 0 14px 0 18px; letter-spacing: 1.8px; }
+  .brand__symbol, .nav.is-stuck .brand__symbol { width: 34px; }
+  .brand__name { font-size: 17px; letter-spacing: 0.1em; }
+  .brand__tag { font-size: 11px; letter-spacing: 0.08em; }
+  .faq { padding-inline: var(--space-4); }
+}
+
+/* Depoimentos (seção escondida enquanto DEPOIMENTOS estiver vazio) */
+.quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: var(--space-6); }
+.quote { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-6); margin: 0; padding: var(--space-8); border-radius: var(--radius-xl); background: linear-gradient(165deg, var(--white), var(--cream)); box-shadow: inset 0 0 0 1px rgba(201, 168, 106, 0.28); }
+.quote::before { content: "\201C"; position: absolute; top: var(--space-3); right: var(--space-6); color: var(--gold); font: italic 300 88px/1 var(--font-display); opacity: 0.55; pointer-events: none; }
+.quote blockquote { margin: 0; }
+.quote blockquote p { margin: 0; color: var(--text-strong); font: italic 400 22px/30px var(--font-display); text-wrap: pretty; }
+.quote figcaption { display: flex; flex-direction: column; gap: 2px; padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+.quote__name { color: var(--text-strong); font: 600 14px/20px var(--font-sans); }
+.quote__src { color: var(--text-muted); font: 500 11px/16px var(--font-sans); letter-spacing: 2px; text-transform: uppercase; }
+
+/* Barra fixa (celular): o fim da página não fica escondido atrás dela */
+@media (max-width: 899px) { html { scroll-padding-bottom: 88px; } }
+@media (min-width: 900px) { .hero .lc-hero__title { text-wrap: wrap; } }
+
+/* Contraste AA medido: o véu dourado dos selos clareia na ponta (texto gold-ink ≥ 4,5:1 em todo o selo) */
+:root { --gold-wash: linear-gradient(135deg, rgba(230, 207, 159, 0.55) 0%, rgba(250, 244, 236, 0.9) 55%, rgba(230, 207, 159, 0.5) 100%); }
+/* Rodapé: ".foot a" deixava o texto do botão sólido em creme sobre dourado (1,7:1); volta ao marrom (≥ 5,6:1) */
+.foot .lc-btn--solid { color: var(--on-accent); }
+@media (min-width: 900px) and (max-width: 1199px) { .hero-frame { width: 100%; height: auto; max-height: 620px; } }
+
+/* Menu do celular: fundo opaco (o hero não aparece por trás), itens de 44 px separados por fio bege */
+@media (max-width: 899px) {
+  .nav__links { gap: 0; padding-block: var(--space-2) var(--space-6); background: var(--cream); border-top: 1px solid var(--border-subtle); }
+  .nav__links li { width: 100%; border-bottom: 1px solid var(--border-subtle); }
+  .nav__links a { display: block; padding-block: var(--space-4); }
+  .nav__links a::after { bottom: 10px; right: auto; width: 32px; }
+  .nav.is-open { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav__links { top: 100%; }   /* cola na base do cabeçalho, com ou sem rolagem */
+}
