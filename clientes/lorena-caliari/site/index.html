@@ -296,6 +296,38 @@
         <h2 class="lc-title promise__title" id="t-impacto">Resultado natural, <span class="lc-hl">sem pressa</span></h2>
         <p class="lc-body promise__body">Sem promessa de milagre. Um plano feito para o seu tempo, com acompanhamento de perto e resultados que se constroem de forma gradual.</p>
       </div>
+
+      <!-- Carrossel: três pilares do atendimento (textos que já estão no site). No desktop os três ficam lado a lado. -->
+      <div class="carousel reveal" data-carousel>
+        <ul class="carousel__track" id="pilares" tabindex="0" aria-label="Pilares do atendimento" role="list">
+          <li class="pillar" id="pilar-1">
+            <span class="pillar__n" aria-hidden="true">01</span>
+            <span class="pillar__icon" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+            <h3 class="pillar__title">Avaliação individual</h3>
+            <p class="pillar__text">Pele e rosto, antes de tudo. Só indico o que faz sentido para você.</p>
+            <span class="pillar__tag">Antes de decidir</span>
+          </li>
+          <li class="pillar" id="pilar-2">
+            <span class="pillar__n" aria-hidden="true">02</span>
+            <span class="pillar__icon" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+            <h3 class="pillar__title">Plano feito para o seu tempo</h3>
+            <p class="pillar__text">Etapas graduais, explicadas uma a uma, sem pressa para fechar nada.</p>
+            <span class="pillar__tag">Sem pressa</span>
+          </li>
+          <li class="pillar" id="pilar-3">
+            <span class="pillar__n" aria-hidden="true">03</span>
+            <span class="pillar__icon" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+            <h3 class="pillar__title">Resultado natural</h3>
+            <p class="pillar__text">Realçar, nunca transformar. Acompanhamento de perto antes e depois de cada etapa.</p>
+            <span class="pillar__tag">Sem promessa de milagre</span>
+          </li>
+        </ul>
+        <div class="carousel__nav">
+          <button class="carousel__btn carousel__btn--prev" type="button" aria-controls="pilares" aria-label="Pilar anterior"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <div class="carousel__dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <button class="carousel__btn carousel__btn--next" type="button" aria-controls="pilares" aria-label="Próximo pilar"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -328,6 +360,25 @@
             </a>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos: só aparece quando DEPOIMENTOS (no script) tiver depoimentos reais e autorizados. Vazio = seção escondida. -->
+  <section class="section testimonials" id="depoimentos" aria-labelledby="t-depo" hidden>
+    <div class="container">
+      <div class="section__row reveal">
+        <div class="section__col">
+          <p class="lc-overline"><svg aria-hidden="true"><use href="#i-spark"/></svg>Depoimentos</p>
+          <h2 class="lc-title" id="t-depo">O que dizem as <span class="lc-hl">pacientes</span></h2>
+        </div>
+        <div class="carousel__nav carousel__nav--head">
+          <button class="carousel__btn carousel__btn--prev" type="button" aria-controls="depo-track" aria-label="Depoimento anterior"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          <button class="carousel__btn carousel__btn--next" type="button" aria-controls="depo-track" aria-label="Próximo depoimento"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+      <div class="carousel carousel--quotes" data-carousel>
+        <ul class="carousel__track" id="depo-track" tabindex="0" aria-label="Depoimentos de pacientes" role="list"></ul>
       </div>
     </div>
   </section>
@@ -537,6 +588,30 @@
       m.style.setProperty("--mx", `${e.clientX - r.left}px`);
       m.style.setProperty("--my", `${e.clientY - r.top}px`);
     });
+  });
+
+  // Carrosséis (pilares e depoimentos): rolagem nativa com snap; setas e pontos acompanham a posição
+  document.querySelectorAll("[data-carousel] .carousel__track").forEach((track) => {
+    const btns = [...document.querySelectorAll(`[aria-controls="${track.id}"]`)];
+    const prev = btns.filter((b) => b.classList.contains("carousel__btn--prev")), next = btns.filter((b) => b.classList.contains("carousel__btn--next"));
+    const dots = [...track.parentElement.querySelectorAll(".carousel__dots i")];
+    const items = () => [...track.children];
+    const smooth = matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    const step = (dir) => { const it = items()[0]; if (!it) return; const gap = parseFloat(getComputedStyle(track).columnGap) || 0; track.scrollBy({ left: dir * (it.getBoundingClientRect().width + gap), behavior: smooth }); };
+    prev.forEach((b) => b.addEventListener("click", () => step(-1)));
+    next.forEach((b) => b.addEventListener("click", () => step(1)));
+    let q = false;
+    const sync = () => {
+      q = false;
+      const max = track.scrollWidth - track.clientWidth, x = track.scrollLeft;
+      const scrollable = max > 2;
+      track.parentElement.classList.toggle("is-static", !scrollable);
+      btns.forEach((b) => b.closest(".carousel__nav")?.classList.toggle("is-static", !scrollable));
+      prev.forEach((b) => (b.disabled = x <= 2)); next.forEach((b) => (b.disabled = x >= max - 2));
+      if (dots.length) { const n = items().length, k = scrollable ? Math.round((x / max) * (n - 1)) : -1; dots.forEach((d, j) => d.classList.toggle("is-on", j === k)); }
+    };
+    const req = () => { if (!q) { q = true; requestAnimationFrame(sync); } };
+    track.addEventListener("scroll", req, { passive: true }); addEventListener("resize", req); req();   // 1ª leitura no próximo quadro (sem forçar layout durante o carregamento)
   });
 
   // Hero: a rolagem conduz uma sequência de quadros (canvas). Sem <video>: sem travar em seek e funciona no Safari/iOS.
