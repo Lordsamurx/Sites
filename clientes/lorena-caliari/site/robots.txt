@@ -1,0 +1,6 @@
+# Lorena Caliari Estética Avançada
+User-agent: *
+Allow: /
+
+# TODO (URL final): descomentar com o domínio definitivo e publicar o sitemap.xml (modelo em sitemap.exemplo.xml).
+# Sitemap: https://DOMINIO-FINAL/sitemap.xml
