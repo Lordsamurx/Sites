@@ -25,8 +25,9 @@
     const l = document.createElement("link"); l.rel = "preload"; l.as = "font"; l.type = "font/woff2"; l.crossOrigin = ""; l.href = `assets/fonts/${f}.woff2`; document.head.appendChild(l);
   });
 </script>
-<link rel="preload" as="image" href="assets/frames/h-000.webp" fetchpriority="high">
+<link rel="preload" as="image" href="assets/frames/h-000.webp" imagesrcset="assets/frames/h-000-m.webp 1000w, assets/frames/h-000.webp 1200w" imagesizes="(max-width: 899px) 366px, 46vw" fetchpriority="high">
 <link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/components.css">
@@ -114,7 +115,7 @@
                 <span class="hero-frame__line" aria-hidden="true"></span>
                 <svg class="hero-frame__spark" aria-hidden="true"><use href="#i-spark"/></svg>
                 <div class="hero-arch" id="hero-arch" role="img" aria-label="Sequência de imagens de um atendimento de estética facial">
-                  <img class="hero-poster" src="assets/frames/h-000.webp" alt="" width="800" height="900" fetchpriority="high">
+                  <img class="hero-poster" src="assets/frames/h-000.webp" srcset="assets/frames/h-000-m.webp 1000w, assets/frames/h-000.webp 1200w" sizes="(max-width: 899px) 366px, 46vw" alt="" width="800" height="900" fetchpriority="high">
                   <canvas id="hero-canvas" width="800" height="900" aria-hidden="true"></canvas>
                 </div>
               </div>
