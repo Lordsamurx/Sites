@@ -6,7 +6,7 @@ Atendente virtual no WhatsApp da clínica. A Lorena é a única profissional, en
 | Arquivo | O que é |
 |---|---|
 | `workflows/01-agente-whatsapp.json` | Workflow principal: WhatsApp → planilha de leads → agente de IA → resposta. **É o que fica ativo.** |
-| `workflows/02-ferramentas-agenda.json` | Sub-workflow chamado pelas ferramentas do agente: consultar horários, agendar, listar, cancelar, chamar a Lorena. Não precisa ser ativado. |
+| `workflows/02-ferramentas-agenda.json` | Sub-workflow chamado pelas ferramentas do agente: consultar horários, agendar, listar, cancelar, chamar a Lorena. **Precisa ser publicado** (no n8n 2.x, sub-workflow não publicado não pode ser chamado). |
 | `planilha-leads-modelo.csv` | Cabeçalho da planilha de leads (importar no Google Planilhas, aba `Leads`). |
 | `src/` | Código de cada nó "Code" e o prompt do agente. **Edite aqui**, não nos JSON. |
 | `scripts/gerar-workflows.mjs` | Monta os dois JSON a partir de `src/` (`npm run gerar`). |
@@ -64,7 +64,7 @@ Também dá para mudar `bot_pausado` direto na planilha (`sim` ou vazio).
    - nós HTTP de agenda: escolha a credencial **Google Calendar OAuth2 API**;
    - nós **Avisar Lorena**: credencial **WhatsApp API** (token permanente da Meta);
    - nó **Pausar assistente**: credencial do Google Sheets e a planilha `Leads`;
-   - salve.
+   - salve e **publique** (botão *Publish*). Sem isso, o agente recebe o erro "Workflow is not active". Depois de qualquer mudança no 02, publique de novo.
 3. **Importe o workflow 01.** Nele:
    - nas 5 ferramentas (`consultar_horarios`, `agendar`, `listar_meus_agendamentos`, `cancelar_agendamento`, `chamar_lorena`): selecione o workflow 02 no campo *Workflow* (ou cole o ID). Se os campos não aparecerem, clique em atualizar o esquema de entradas;
    - nó **Normalizar**: troque `LORENA_WHATSAPP` pelo número pessoal da Lorena (só dígitos, com 55 e DDD);
@@ -84,6 +84,12 @@ Faça pelo menos estas 3 conversas reais, do número de teste:
 Também: mandar duas mensagens seguidas, um áudio, uma foto, e tentar cancelar com outro número um evento que não é dele.
 
 Os testes automáticos da lógica (sem n8n): `npm install` e `npm test`.
+
+### O que já foi verificado
+- Testes da lógica de agenda, comandos, áudio e estrutura dos JSON (`npm test`, 21 testes).
+- Tipos, versões e nomes de parâmetros dos 54 nós conferidos contra o n8n 2.46.6 instalado.
+- Os dois JSON importam no n8n 2.46.6 (`n8n import:workflow`), e o workflow 02 executou de verdade, chamado por outro workflow, nos caminhos que não precisam de credencial (nome faltando, domingo, data inválida), devolvendo a mensagem certa.
+- Não testado aqui (precisa das contas reais): Google Agenda, Google Planilhas, WhatsApp, OpenAI e o agente conversando. É o que os 3 testes acima cobrem.
 
 ## Limites conhecidos e próximos passos
 - **Janela de 24 h da Meta:** mensagem livre só é entregue a quem falou com o número da clínica nas últimas 24 h. Os avisos para a Lorena chegam sempre que ela tiver mandado algo para o número da clínica nesse período (um comando já conta). Para garantir, crie um **modelo de mensagem aprovado** na Meta para os avisos ou troque os nós "Avisar Lorena" por e-mail.

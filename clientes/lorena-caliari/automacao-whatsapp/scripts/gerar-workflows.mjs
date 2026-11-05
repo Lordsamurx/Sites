@@ -114,7 +114,7 @@ function ferramentas() {
 
   const nodes = [
     nota('Nota: configuração', [-260, -260], 620, 320,
-      '## Ferramentas da agenda · Lorena Caliari\nEste workflow é chamado pelas ferramentas do agente (workflow 01). Não precisa ser ativado.\n\n1. Ajuste expediente, durações e regras no nó **Config** (valores de EXEMPLO).\n2. Selecione a credencial **Google Calendar OAuth2** em todos os nós HTTP.\n3. Selecione a credencial **WhatsApp** nos nós "Avisar Lorena".\n4. No nó **Pausar assistente**, escolha a planilha de leads (aba "Leads").\n5. Copie o ID deste workflow (na URL) e cole nas 5 ferramentas do workflow 01.', 4),
+      '## Ferramentas da agenda · Lorena Caliari\nEste workflow é chamado pelas ferramentas do agente (workflow 01). **Publique (ative) este workflow:** no n8n 2.x um sub-workflow só pode ser chamado depois de publicado.\n\n1. Ajuste expediente, durações e regras no nó **Config** (valores de EXEMPLO).\n2. Selecione a credencial **Google Calendar OAuth2** em todos os nós HTTP.\n3. Selecione a credencial **WhatsApp** nos nós "Avisar Lorena".\n4. No nó **Pausar assistente**, escolha a planilha de leads (aba "Leads").\n5. Publique, copie o ID deste workflow (na URL) e cole nas 5 ferramentas do workflow 01. Depois de qualquer mudança aqui, publique de novo.', 4),
     no('Quando chamado pelo agente', 'n8n-nodes-base.executeWorkflowTrigger', 1.1, [0, 400], {
       workflowInputs: { values: ENTRADAS.map((name) => ({ name, type: 'string' })) },
     }),
