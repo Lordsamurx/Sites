@@ -1,0 +1,15 @@
+{
+  "name": "lorena-caliari-site",
+  "private": true,
+  "description": "Testes do site estático da Lorena Caliari (o site não tem build: abra site/index.html).",
+  "scripts": {
+    "serve": "node tests/server.js",
+    "test": "playwright test",
+    "lighthouse": "node tests/lighthouse.js"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.63.0",
+    "lighthouse": "13.5.0"
+  }
+}
