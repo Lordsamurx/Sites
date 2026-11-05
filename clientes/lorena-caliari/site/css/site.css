@@ -543,7 +543,7 @@ body.in-hero .wa, body.in-hero .dock { opacity: 0; translate: 0 16px; pointer-ev
 .skip:focus { padding: var(--space-3) var(--space-5); min-height: 44px; display: inline-flex; align-items: center; }
 .nav__toggle, .foot__top, .foot__chip svg, .lc-btn__icon, .textlink svg, .lc-card__more svg { flex: none; }
 .nav__toggle { place-items: center; transition: background-color var(--dur-fast), border-color var(--dur-fast); }
-.nav__toggle:hover { background: var(--beige-light); }
+@media (hover: hover) { .nav__toggle:hover { background: var(--beige-light); } }
 .textlink { min-height: 44px; padding-top: 22px; }
 .foot nav a { padding-block: 10px; }
 .foot ul { gap: var(--space-1); }
