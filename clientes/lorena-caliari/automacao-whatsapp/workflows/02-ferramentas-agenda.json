@@ -1,0 +1,1045 @@
+{
+  "name": "Lorena Caliari · 02 Ferramentas da agenda",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Ferramentas da agenda · Lorena Caliari\nEste workflow é chamado pelas ferramentas do agente (workflow 01). Não precisa ser ativado.\n\n1. Ajuste expediente, durações e regras no nó **Config** (valores de EXEMPLO).\n2. Selecione a credencial **Google Calendar OAuth2** em todos os nós HTTP.\n3. Selecione a credencial **WhatsApp** nos nós \"Avisar Lorena\".\n4. No nó **Pausar assistente**, escolha a planilha de leads (aba \"Leads\").\n5. Copie o ID deste workflow (na URL) e cole nas 5 ferramentas do workflow 01.",
+        "width": 620,
+        "height": 320,
+        "color": 4
+      },
+      "id": "82f7a6ad-ddec-49df-a1c4-d3dac97c30ef",
+      "name": "Nota: configuração",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "acao",
+              "type": "string"
+            },
+            {
+              "name": "telefone",
+              "type": "string"
+            },
+            {
+              "name": "nome",
+              "type": "string"
+            },
+            {
+              "name": "procedimento",
+              "type": "string"
+            },
+            {
+              "name": "data_inicio",
+              "type": "string"
+            },
+            {
+              "name": "data_fim",
+              "type": "string"
+            },
+            {
+              "name": "inicio",
+              "type": "string"
+            },
+            {
+              "name": "evento_id",
+              "type": "string"
+            },
+            {
+              "name": "motivo",
+              "type": "string"
+            },
+            {
+              "name": "phone_number_id",
+              "type": "string"
+            },
+            {
+              "name": "lorena_whatsapp",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "id": "4fdaf7d7-b0ef-41d9-a9b5-cc9a88438c61",
+      "name": "Quando chamado pelo agente",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================================\n// CONFIGURAÇÃO DA AGENDA DA LORENA\n// Valores marcados com \"EXEMPLO\" ainda precisam ser confirmados com ela.\n// =====================================================================\nconst CONFIG = {\n  fuso: 'America/Sao_Paulo',\n\n  // ID da agenda do Google. \"primary\" = agenda principal da conta conectada.\n  // Para usar uma agenda separada (\"Atendimentos\"), cole o ID dela aqui\n  // (Configurações da agenda > Integrar agenda > ID da agenda).\n  agendaId: 'primary',\n\n  // Expediente por dia da semana: 1 = segunda ... 6 = sábado, 7 = domingo.\n  // Dia sem entrada = fechado. Pausas (almoço) = duas faixas no mesmo dia.\n  // EXEMPLO: confirmar com a Lorena.\n  expediente: {\n    1: [['09:00', '12:00'], ['13:00', '18:00']],\n    2: [['09:00', '12:00'], ['13:00', '18:00']],\n    3: [['09:00', '12:00'], ['13:00', '18:00']],\n    4: [['09:00', '12:00'], ['13:00', '18:00']],\n    5: [['09:00', '12:00'], ['13:00', '18:00']],\n    6: [['09:00', '13:00']],\n  },\n\n  // Duração de cada atendimento em minutos. EXEMPLO: confirmar com a Lorena.\n  duracoes: {\n    avaliacao: 60,\n    retorno: 30,\n    bioestimuladores: 60,\n    skinbooster: 60,\n    harmonizacao_facial: 90,\n    limpeza_de_pele: 90,\n    peeling: 60,\n    microagulhamento: 90,\n  },\n  duracaoPadrao: 60,\n\n  // Nome que aparece no evento e nas mensagens.\n  nomes: {\n    avaliacao: 'Avaliação',\n    retorno: 'Retorno',\n    bioestimuladores: 'Bioestimuladores',\n    skinbooster: 'Skinbooster',\n    harmonizacao_facial: 'Harmonização facial',\n    limpeza_de_pele: 'Limpeza de pele',\n    peeling: 'Peeling',\n    microagulhamento: 'Microagulhamento',\n  },\n\n  intervaloEntreAtendimentosMin: 15, // folga para limpar a sala e preparar a próxima\n  passoMinutos: 30,                  // de quanto em quanto tempo oferecer horários\n  antecedenciaMinimaHoras: 2,        // não agenda para daqui a menos de 2 h\n  diasMaximosNoFuturo: 60,           // agenda aberta até 60 dias à frente\n  maxHorariosPorDia: 4,              // quantos horários sugerir por dia\n  maxHorariosPorConsulta: 12,        // total por consulta (o agente oferece 2 a 4)\n  cancelamentoAutomaticoAteHoras: 12, // com menos que isso, quem decide é a Lorena (EXEMPLO)\n};\n\n// ---------------------------------------------------------------------\nconst e = $input.first().json;\nconst txt = (v) => (v === null || v === undefined ? '' : String(v).trim());\nconst semAcento = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();\n\nfunction chaveProcedimento(p) {\n  const s = semAcento(txt(p));\n  if (!s) return 'avaliacao';\n  if (s.includes('avalia')) return 'avaliacao';\n  if (s.includes('retorno')) return 'retorno';\n  if (s.includes('bioestim')) return 'bioestimuladores';\n  if (s.includes('skin')) return 'skinbooster';\n  if (s.includes('harmoniz')) return 'harmonizacao_facial';\n  if (s.includes('limpeza')) return 'limpeza_de_pele';\n  if (s.includes('peeling')) return 'peeling';\n  if (s.includes('microagulh')) return 'microagulhamento';\n  return 'avaliacao';\n}\n\nconst chave = chaveProcedimento(e.procedimento);\n\nreturn [{\n  json: {\n    acao: semAcento(txt(e.acao)),\n    telefone: txt(e.telefone).replace(/\\D/g, ''),\n    nome: txt(e.nome),\n    procedimento: chave,\n    procedimento_nome: CONFIG.nomes[chave] || chave,\n    duracao: CONFIG.duracoes[chave] || CONFIG.duracaoPadrao,\n    data_inicio: txt(e.data_inicio),\n    data_fim: txt(e.data_fim),\n    inicio: txt(e.inicio),\n    evento_id: txt(e.evento_id),\n    motivo: txt(e.motivo),\n    phone_number_id: txt(e.phone_number_id),\n    lorena_whatsapp: txt(e.lorena_whatsapp).replace(/\\D/g, ''),\n    cfg: CONFIG,\n  },\n}];\n"
+      },
+      "id": "8851142d-a56f-4885-ae66-8a165b33fee7",
+      "name": "Config",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e3149e2e-6106-4800-ae68-703fa704060a",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "consultar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "consultar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "90f5a8cd-85a2-426b-ab0e-e2cbfaa07389",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "agendar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agendar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1c71b689-dd2f-4eb2-ac3f-a92389466a72",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "listar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "listar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "16dd6737-8151-49ee-a5ca-1327457de669",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "cancelar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "aca48921-c249-4506-ab60-95b918a60164",
+                    "leftValue": "={{ $json.acao }}",
+                    "rightValue": "chamar_lorena",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "chamar_lorena"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d621dc82-376b-4d29-a32b-d90b5765ed1f",
+      "name": "Ação",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        440,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Define a janela de datas da consulta (no máximo 14 dias, nunca no passado)\n// e monta o pedido de \"livre/ocupado\" (freeBusy) para o Google Agenda.\nconst d = $input.first().json;\nconst cfg = d.cfg;\nconst z = cfg.fuso;\nconst agora = DateTime.now().setZone(z);\nconst hoje = agora.startOf('day');\nconst limite = hoje.plus({ days: cfg.diasMaximosNoFuturo });\n\nconst lerData = (s) => {\n  const v = DateTime.fromISO(String(s || '').slice(0, 10), { zone: z });\n  return v.isValid ? v.startOf('day') : null;\n};\n\nlet ini = lerData(d.data_inicio) || hoje;\nif (ini < hoje) ini = hoje;\nconst foraDoLimite = ini > limite;\nif (foraDoLimite) ini = limite;\n\nlet fim = lerData(d.data_fim) || ini.plus({ days: 6 });\nif (fim < ini) fim = ini;\nif (fim > limite) fim = limite;\nif (fim.diff(ini, 'days').days > 13) fim = ini.plus({ days: 13 });\n\nconst janelaFim = fim.endOf('day');\n\nreturn [{\n  json: {\n    janela_inicio: ini.toISO(),\n    janela_fim: janelaFim.toISO(),\n    fora_do_limite: foraDoLimite,\n    freebusy: {\n      timeMin: ini.toISO(),\n      timeMax: janelaFim.toISO(),\n      timeZone: z,\n      items: [{ id: cfg.agendaId }],\n    },\n  },\n}];\n"
+      },
+      "id": "d5d22864-3f4a-4f9e-a86c-124574dd5678",
+      "name": "Montar consulta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/calendar/v3/freeBusy",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.freebusy) }}",
+        "options": {}
+      },
+      "id": "14415034-c362-46cd-a0a9-8d6959a2ef33",
+      "name": "Livre/ocupado (consulta)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Cruza o expediente com os horários ocupados do Google Agenda\n// e devolve opções livres, espalhadas ao longo de cada dia.\nconst d = $('Config').first().json;\nconst cfg = d.cfg;\nconst p = $('Montar consulta').first().json;\nconst resp = $input.first().json;\nconst z = cfg.fuso;\n\nconst cal = Object.values(resp.calendars || {})[0] || {};\nif (cal.errors && cal.errors.length) {\n  return [{ json: { resultado: 'Não consegui ler a agenda agora. Peça desculpas e use chamar_lorena para ela confirmar o horário pessoalmente.' } }];\n}\n\nconst ocupados = (cal.busy || []).map((b) => ({\n  s: DateTime.fromISO(b.start).toMillis(),\n  e: DateTime.fromISO(b.end).toMillis(),\n}));\nconst folga = cfg.intervaloEntreAtendimentosMin * 60000;\nconst livre = (s, e) => ocupados.every((b) => e + folga <= b.s || b.e + folga <= s);\nconst hm = (t) => { const [h, m] = t.split(':').map(Number); return { hour: h, minute: m, second: 0, millisecond: 0 }; };\n\nconst agora = DateTime.now().setZone(z);\nconst minimo = agora.plus({ hours: cfg.antecedenciaMinimaHoras });\nconst dur = d.duracao;\n\n// Escolhe k itens espalhados (manhã e tarde) em vez dos k primeiros.\nfunction espalhar(lista, k) {\n  if (lista.length <= k) return lista;\n  const out = [];\n  for (let i = 0; i < k; i++) out.push(lista[Math.round((i * (lista.length - 1)) / (k - 1))]);\n  return out;\n}\n\nconst dias = [];\nlet total = 0;\nlet dia = DateTime.fromISO(p.janela_inicio, { zone: z }).startOf('day');\nconst ultimo = DateTime.fromISO(p.janela_fim, { zone: z }).startOf('day');\n\nwhile (dia <= ultimo && total < cfg.maxHorariosPorConsulta) {\n  const faixas = cfg.expediente[dia.weekday] || [];\n  const opcoes = [];\n  for (const [a, b] of faixas) {\n    let s = dia.set(hm(a));\n    const fimFaixa = dia.set(hm(b));\n    while (s.plus({ minutes: dur }) <= fimFaixa) {\n      const e = s.plus({ minutes: dur });\n      if (s >= minimo && livre(s.toMillis(), e.toMillis())) opcoes.push(s);\n      s = s.plus({ minutes: cfg.passoMinutos });\n    }\n  }\n  if (opcoes.length) {\n    const k = Math.min(cfg.maxHorariosPorDia, cfg.maxHorariosPorConsulta - total);\n    const escolhidos = espalhar(opcoes, k);\n    dias.push({ dia, horarios: escolhidos });\n    total += escolhidos.length;\n  }\n  dia = dia.plus({ days: 1 });\n}\n\nconst fmtDia = (x) => x.setLocale('pt-BR').toFormat(\"cccc, dd/MM/yyyy\");\nconst ini = DateTime.fromISO(p.janela_inicio, { zone: z });\nconst fim = DateTime.fromISO(p.janela_fim, { zone: z });\n\nif (!dias.length) {\n  const extra = p.fora_do_limite ? ` A agenda só está aberta até ${cfg.diasMaximosNoFuturo} dias à frente.` : '';\n  return [{ json: { resultado: `Nenhum horário livre para ${d.procedimento_nome} (${dur} min) entre ${fmtDia(ini)} e ${fmtDia(fim)}.${extra} Ofereça consultar outro período.` } }];\n}\n\nconst linhas = dias.map(({ dia: x, horarios }) =>\n  `- ${fmtDia(x)}: ` + horarios.map((h) => `${h.toFormat('HH:mm')} [${h.toFormat(\"yyyy-MM-dd'T'HH:mm\")}]`).join(', ')\n);\n\nreturn [{\n  json: {\n    resultado:\n      `Horários livres para ${d.procedimento_nome} (${dur} min):\\n` + linhas.join('\\n') +\n      '\\nO valor entre colchetes é o código para a ferramenta agendar. Não mostre o código para a paciente; ofereça de 2 a 4 opções em linguagem natural.',\n  },\n}];\n"
+      },
+      "id": "6056be7d-0c13-489c-a380-83db4f958ef6",
+      "name": "Calcular horários livres",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1140,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Confere o pedido de agendamento antes de tocar na agenda:\n// nome, formato da data, antecedência, limite de dias e expediente.\nconst d = $input.first().json;\nconst cfg = d.cfg;\nconst z = cfg.fuso;\nconst erro = (m) => [{ json: { ok: false, resultado: m } }];\n\nif (!d.telefone) return erro('Telefone da paciente ausente. Use chamar_lorena.');\nif (d.nome.length < 3) return erro('Falta o nome completo da paciente. Pergunte antes de agendar.');\n\nlet ini = DateTime.fromISO(d.inicio, { zone: z });\nif (!d.inicio || !ini.isValid) {\n  return erro('Data e hora inválidas. Use o código AAAA-MM-DDTHH:MM exatamente como veio de consultar_horarios.');\n}\nini = ini.set({ second: 0, millisecond: 0 });\nconst fim = ini.plus({ minutes: d.duracao });\nconst agora = DateTime.now().setZone(z);\n\nif (ini < agora.plus({ hours: cfg.antecedenciaMinimaHoras })) {\n  return erro(`Esse horário já passou ou está muito próximo (antecedência mínima de ${cfg.antecedenciaMinimaHoras} h). Consulte outros horários.`);\n}\nif (ini >= agora.startOf('day').plus({ days: cfg.diasMaximosNoFuturo + 1 })) {\n  return erro(`A agenda só está aberta até ${cfg.diasMaximosNoFuturo} dias à frente. Ofereça uma data mais próxima.`);\n}\n\nconst hm = (t) => { const [h, m] = t.split(':').map(Number); return { hour: h, minute: m, second: 0, millisecond: 0 }; };\nconst faixas = cfg.expediente[ini.weekday] || [];\nconst cabe = faixas.some(([a, b]) => ini >= ini.set(hm(a)) && fim <= ini.set(hm(b)));\nif (!cabe) return erro('Esse horário está fora do expediente. Use consultar_horarios e ofereça um dos horários livres.');\n\nconst folga = cfg.intervaloEntreAtendimentosMin;\nconst quando = ini.setLocale('pt-BR').toFormat(\"cccc, dd/MM/yyyy 'às' HH:mm\");\n\nconst evento = {\n  summary: `${d.procedimento_nome} · ${d.nome}`,\n  description:\n    'Agendado pelo assistente do WhatsApp.\\n' +\n    `Paciente: ${d.nome}\\n` +\n    `WhatsApp: https://wa.me/${d.telefone}\\n` +\n    `Procedimento: ${d.procedimento_nome} (${d.duracao} min)`,\n  start: { dateTime: ini.toISO(), timeZone: z },\n  end: { dateTime: fim.toISO(), timeZone: z },\n  extendedProperties: { private: { telefone: d.telefone, origem: 'assistente-whatsapp', procedimento: d.procedimento } },\n  reminders: { useDefault: true },\n};\n\nreturn [{\n  json: {\n    ok: true,\n    inicio: ini.toISO(),\n    fim: fim.toISO(),\n    quando,\n    evento,\n    freebusy: {\n      timeMin: ini.minus({ minutes: folga }).toISO(),\n      timeMax: fim.plus({ minutes: folga }).toISO(),\n      timeZone: z,\n      items: [{ id: cfg.agendaId }],\n    },\n    aviso_lorena:\n      `Novo agendamento pelo assistente\\n${d.procedimento_nome} · ${quando}\\n` +\n      `Paciente: ${d.nome}\\nWhatsApp: https://wa.me/${d.telefone}`,\n  },\n}];\n"
+      },
+      "id": "aabbdc7c-9c8b-474c-a951-62a56fc630e4",
+      "name": "Validar pedido",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d3e80a33-8046-497d-adbf-b1b546b4a9c6",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d3e80a33-8046-497d-adbf-b1b546b4a9c6",
+      "name": "Pedido válido?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        920,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/calendar/v3/freeBusy",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.freebusy) }}",
+        "options": {}
+      },
+      "id": "b96512a6-e203-4467-ab86-a7145df19a28",
+      "name": "Livre/ocupado (agendar)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1140,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Segunda checagem, logo antes de criar o evento: o horário ainda está livre?\n// (Evita marcar duas pacientes no mesmo horário.)\nconst cfg = $('Config').first().json.cfg;\nconst p = $('Validar pedido').first().json;\nconst resp = $input.first().json;\n\nconst cal = Object.values(resp.calendars || {})[0] || {};\nif (cal.errors && cal.errors.length) {\n  return [{ json: { livre: false, resultado: 'Não consegui confirmar a agenda agora. Peça desculpas e use chamar_lorena.' } }];\n}\n\nconst s = DateTime.fromISO(p.inicio).toMillis();\nconst e = DateTime.fromISO(p.fim).toMillis();\nconst folga = cfg.intervaloEntreAtendimentosMin * 60000;\nconst conflito = (cal.busy || []).some((b) => {\n  const bs = DateTime.fromISO(b.start).toMillis();\n  const be = DateTime.fromISO(b.end).toMillis();\n  return !(e + folga <= bs || be + folga <= s);\n});\n\nreturn [{\n  json: {\n    livre: !conflito,\n    resultado: conflito ? 'Esse horário acabou de ser ocupado. Use consultar_horarios de novo e ofereça outras opções.' : '',\n  },\n}];\n"
+      },
+      "id": "6b4f4179-4fa6-49ea-a8ae-2fc897245377",
+      "name": "Conferir conflito",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6d392622-540d-4de8-a3ee-eca0f164209d",
+              "leftValue": "={{ $json.livre }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6d392622-540d-4de8-a3ee-eca0f164209d",
+      "name": "Horário livre?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1580,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://www.googleapis.com/calendar/v3/calendars/{{ encodeURIComponent($('Config').first().json.cfg.agendaId) }}/events",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Validar pedido').first().json.evento) }}",
+        "options": {}
+      },
+      "id": "b2c53f1e-691f-4824-a24e-d3b7b3bac452",
+      "name": "Criar evento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Config').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Config').first().json.lorena_whatsapp }}",
+        "textBody": "={{ $('Validar pedido').first().json.aviso_lorena }}",
+        "additionalFields": {}
+      },
+      "id": "44760671-fd60-4d1f-ab9e-bda30575376e",
+      "name": "Avisar Lorena (agendamento)",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        160
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resposta final do agendamento para o agente.\nconst p = $('Validar pedido').first().json;\nconst d = $('Config').first().json;\nconst ev = $('Criar evento').first().json;\n\nreturn [{\n  json: {\n    resultado:\n      `Agendado: ${d.procedimento_nome} em ${p.quando} (evento_id: ${ev.id}). ` +\n      'Confirme para a paciente o dia, o horário e o endereço, e diga que, se precisar desmarcar, é só avisar por aqui.',\n  },\n}];\n"
+      },
+      "id": "7c9175fa-8f5c-4da9-a239-837fa6f3eccb",
+      "name": "Retorno agendado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Devolve ao agente a mensagem de recusa (pedido inválido, horário ocupado etc.).\nreturn $input.all().map((i) => ({ json: { resultado: i.json.resultado } }));\n"
+      },
+      "id": "5760bcef-83a4-4edb-a650-9be799c449bf",
+      "name": "Devolver mensagem",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.googleapis.com/calendar/v3/calendars/{{ encodeURIComponent($('Config').first().json.cfg.agendaId) }}/events",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "privateExtendedProperty",
+              "value": "=telefone={{ $json.telefone }}"
+            },
+            {
+              "name": "timeMin",
+              "value": "={{ $now.toISO() }}"
+            },
+            {
+              "name": "singleEvents",
+              "value": "true"
+            },
+            {
+              "name": "orderBy",
+              "value": "startTime"
+            },
+            {
+              "name": "maxResults",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "de67bdbe-b0eb-4e3d-a2f7-e248acf65f6b",
+      "name": "Buscar agendamentos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lista os próximos agendamentos deste número (só os criados pelo assistente,\n// que guardam o telefone no evento).\nconst cfg = $('Config').first().json.cfg;\nconst z = cfg.fuso;\nconst itens = ($input.first().json.items || []).filter((ev) => ev.status !== 'cancelled');\n\nif (!itens.length) {\n  return [{\n    json: {\n      resultado:\n        'Nenhum agendamento futuro encontrado para este número de WhatsApp. ' +\n        'Se a paciente diz que tem horário (pode ter sido marcado direto com a Lorena ou por outro número), use chamar_lorena.',\n    },\n  }];\n}\n\nconst nomeProc = (ev) => {\n  const k = ev.extendedProperties?.private?.procedimento;\n  return cfg.nomes[k] || String(ev.summary || 'Atendimento').split(' · ')[0];\n};\n\nconst linhas = itens.map((ev) => {\n  const ini = DateTime.fromISO(ev.start?.dateTime || ev.start?.date, { zone: z });\n  return `- ${nomeProc(ev)}: ${ini.setLocale('pt-BR').toFormat(\"cccc, dd/MM/yyyy 'às' HH:mm\")} (evento_id: ${ev.id})`;\n});\n\nreturn [{\n  json: {\n    resultado: `Próximos agendamentos deste número:\\n${linhas.join('\\n')}\\nNão mostre o evento_id para a paciente.`,\n  },\n}];\n"
+      },
+      "id": "cbd9cd2e-6ef3-4074-adc7-2e8b37436734",
+      "name": "Formatar agendamentos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.googleapis.com/calendar/v3/calendars/{{ encodeURIComponent($('Config').first().json.cfg.agendaId) }}/events/{{ encodeURIComponent($json.evento_id || 'sem-id') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "bd97bf6b-b1fc-476b-a39d-881f6c2c21f8",
+      "name": "Buscar evento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Antes de cancelar: o evento existe, é deste número, é futuro\n// e respeita a antecedência mínima para cancelar pelo assistente.\nconst d = $('Config').first().json;\nconst cfg = d.cfg;\nconst z = cfg.fuso;\nconst r = $input.first().json;\nconst ev = r.body && typeof r.body === 'object' ? r.body : {};\nconst erro = (m) => [{ json: { ok: false, resultado: m } }];\nconst digitos = (v) => String(v || '').replace(/\\D/g, '');\n\nif (!d.evento_id) return erro('Falta o evento_id. Use listar_meus_agendamentos primeiro.');\nif (r.statusCode !== 200 || !ev.id || ev.status === 'cancelled') {\n  return erro('Agendamento não encontrado ou já cancelado. Use listar_meus_agendamentos para ver os atuais.');\n}\nif (digitos(ev.extendedProperties?.private?.telefone) !== digitos(d.telefone)) {\n  return erro('Esse agendamento não pertence a este número. Não cancele. Use listar_meus_agendamentos.');\n}\n\nconst ini = DateTime.fromISO(ev.start?.dateTime || ev.start?.date, { zone: z });\nconst agora = DateTime.now().setZone(z);\nif (ini <= agora) return erro('Esse agendamento já passou e não pode ser cancelado.');\n\nconst quando = ini.setLocale('pt-BR').toFormat(\"cccc, dd/MM/yyyy 'às' HH:mm\");\nconst proc = cfg.nomes[ev.extendedProperties?.private?.procedimento] || String(ev.summary || 'Atendimento').split(' · ')[0];\n\nif (ini.diff(agora, 'hours').hours < cfg.cancelamentoAutomaticoAteHoras) {\n  return erro(\n    `Faltam menos de ${cfg.cancelamentoAutomaticoAteHoras} horas para ${proc} (${quando}). ` +\n    'Não cancele pelo assistente: use chamar_lorena com o motivo \"cancelamento em cima da hora\" e avise a paciente que a Lorena vai responder.'\n  );\n}\n\nconst paciente = String(ev.summary || '').split(' · ')[1] || 'paciente';\nreturn [{\n  json: {\n    ok: true,\n    evento_id: ev.id,\n    quando,\n    procedimento_nome: proc,\n    aviso_lorena: `Cancelamento pelo assistente\\n${proc} · ${quando}\\nPaciente: ${paciente}\\nWhatsApp: https://wa.me/${d.telefone}\\nO horário ficou livre na agenda.`,\n  },\n}];\n"
+      },
+      "id": "87fea886-f108-41aa-a2ef-093a4c085ce0",
+      "name": "Conferir dono",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a77a68b4-7f3f-4fad-a5d6-766eb0dd6ef7",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a77a68b4-7f3f-4fad-a5d6-766eb0dd6ef7",
+      "name": "Pode cancelar?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1140,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://www.googleapis.com/calendar/v3/calendars/{{ encodeURIComponent($('Config').first().json.cfg.agendaId) }}/events/{{ encodeURIComponent($json.evento_id) }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleCalendarOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "sendUpdates",
+              "value": "none"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3c6414cb-973b-4587-ac7b-23b70cba70d3",
+      "name": "Apagar evento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Config').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Config').first().json.lorena_whatsapp }}",
+        "textBody": "={{ $('Conferir dono').first().json.aviso_lorena }}",
+        "additionalFields": {}
+      },
+      "id": "cfce4217-8496-40c3-aa6f-014dc8696523",
+      "name": "Avisar Lorena (cancelamento)",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        740
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resposta final do cancelamento para o agente.\nconst p = $('Conferir dono').first().json;\nreturn [{\n  json: {\n    resultado: `Cancelado: ${p.procedimento_nome} de ${p.quando}. Confirme o cancelamento e ofereça remarcar, sem insistir.`,\n  },\n}];\n"
+      },
+      "id": "186f223f-6fd8-4b31-a27a-e247caf398e6",
+      "name": "Retorno cancelado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepara o aviso para a Lorena assumir a conversa.\nconst d = $input.first().json;\nconst agora = DateTime.now().setZone(d.cfg.fuso);\nconst motivo = d.motivo || 'A paciente pediu para falar com a Lorena.';\nconst urgente = /urgente/i.test(motivo);\n\nreturn [{\n  json: {\n    telefone: d.telefone,\n    motivo,\n    agora: agora.toFormat('yyyy-MM-dd HH:mm'),\n    aviso_lorena:\n      `${urgente ? 'URGENTE · ' : ''}Atendimento humano solicitado\\n` +\n      `Motivo: ${motivo}\\n` +\n      `Nome no WhatsApp: ${d.nome || 'não informado'}\\n` +\n      `Conversa: https://wa.me/${d.telefone}\\n` +\n      `O assistente parou de responder esta pessoa. Para ele voltar: #retomar ${d.telefone}`,\n  },\n}];\n"
+      },
+      "id": "d2601cfd-0e1f-4852-a362-4e2edbc40dcc",
+      "name": "Montar chamado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "COLE_AQUI_O_ID_DA_PLANILHA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telefone": "={{ $json.telefone }}",
+            "bot_pausado": "sim",
+            "observacao": "={{ $json.agora + ' · ' + $json.motivo }}"
+          },
+          "matchingColumns": [
+            "telefone"
+          ],
+          "schema": [
+            {
+              "id": "telefone",
+              "displayName": "telefone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "bot_pausado",
+              "displayName": "bot_pausado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "observacao",
+              "displayName": "observacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "id": "056d2508-fe58-4098-a3b6-e8fd81687123",
+      "name": "Pausar assistente",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        920,
+        1000
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "phoneNumberId": "={{ $('Config').first().json.phone_number_id }}",
+        "recipientPhoneNumber": "={{ $('Config').first().json.lorena_whatsapp }}",
+        "textBody": "={{ $('Montar chamado').first().json.aviso_lorena }}",
+        "additionalFields": {}
+      },
+      "id": "aa4b4d8e-e00a-41c0-a5b1-54bcb4d58075",
+      "name": "Avisar Lorena (atendimento)",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        1000
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resposta final do pedido de atendimento humano para o agente.\nreturn [{\n  json: {\n    resultado:\n      'A Lorena foi avisada e o assistente vai pausar nesta conversa. ' +\n      'Diga à paciente, em uma frase, que a Lorena vai responder pessoalmente por aqui assim que possível. Não faça novas perguntas.',\n  },\n}];\n"
+      },
+      "id": "909538c2-5497-4255-adfc-026fb23e1baa",
+      "name": "Retorno chamado",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        1000
+      ]
+    }
+  ],
+  "connections": {
+    "Quando chamado pelo agente": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Ação",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ação": {
+      "main": [
+        [
+          {
+            "node": "Montar consulta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validar pedido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar agendamentos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Montar chamado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Montar consulta": {
+      "main": [
+        [
+          {
+            "node": "Livre/ocupado (consulta)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Livre/ocupado (consulta)": {
+      "main": [
+        [
+          {
+            "node": "Calcular horários livres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar pedido": {
+      "main": [
+        [
+          {
+            "node": "Pedido válido?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pedido válido?": {
+      "main": [
+        [
+          {
+            "node": "Livre/ocupado (agendar)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Devolver mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Livre/ocupado (agendar)": {
+      "main": [
+        [
+          {
+            "node": "Conferir conflito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conferir conflito": {
+      "main": [
+        [
+          {
+            "node": "Horário livre?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Horário livre?": {
+      "main": [
+        [
+          {
+            "node": "Criar evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Devolver mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Criar evento": {
+      "main": [
+        [
+          {
+            "node": "Avisar Lorena (agendamento)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar Lorena (agendamento)": {
+      "main": [
+        [
+          {
+            "node": "Retorno agendado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar agendamentos": {
+      "main": [
+        [
+          {
+            "node": "Formatar agendamentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar evento": {
+      "main": [
+        [
+          {
+            "node": "Conferir dono",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conferir dono": {
+      "main": [
+        [
+          {
+            "node": "Pode cancelar?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pode cancelar?": {
+      "main": [
+        [
+          {
+            "node": "Apagar evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Devolver mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apagar evento": {
+      "main": [
+        [
+          {
+            "node": "Avisar Lorena (cancelamento)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar Lorena (cancelamento)": {
+      "main": [
+        [
+          {
+            "node": "Retorno cancelado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Montar chamado": {
+      "main": [
+        [
+          {
+            "node": "Pausar assistente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausar assistente": {
+      "main": [
+        [
+          {
+            "node": "Avisar Lorena (atendimento)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar Lorena (atendimento)": {
+      "main": [
+        [
+          {
+            "node": "Retorno chamado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {}
+}

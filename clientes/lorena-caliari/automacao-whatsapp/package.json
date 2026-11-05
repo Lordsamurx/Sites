@@ -1,0 +1,13 @@
+{
+  "name": "lorena-caliari-automacao-whatsapp",
+  "private": true,
+  "description": "Gera e testa os workflows do n8n do agente de WhatsApp da Lorena Caliari.",
+  "type": "module",
+  "scripts": {
+    "gerar": "node scripts/gerar-workflows.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "luxon": "3.7.2"
+  }
+}
