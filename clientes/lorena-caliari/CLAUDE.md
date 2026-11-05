@@ -17,8 +17,8 @@ Fonte da verdade: `design-system/project/README.md` e `tokens.json`. Resumo:
 - Respeite `prefers-reduced-motion` em qualquer animação nova.
 
 ## Cuidados técnicos
-- O hero é uma sequência de quadros WebP (`site/assets/frames/`, 99 quadros) desenhada num `<canvas>` conforme a rolagem; o script está no fim de `site/index.html`. Se trocar os quadros, atualize `N` e `CUTS` (cortes de cena, sem mistura entre quadros).
-- Todos os botões de agendamento usam `data-wa="mensagem"`; o número vem de `WA_NUMBER` no script (hoje placeholder).
+- O hero é uma sequência de quadros WebP (`site/assets/frames/`, 84 quadros) desenhada num `<canvas>` conforme a rolagem; o script está no fim de `site/index.html`. Se trocar os quadros, atualize `N` e `CUTS` (cortes de cena, sem mistura entre quadros).
+- Todos os botões de agendamento usam `data-wa="mensagem"`; o número vem de `WA_NUMBER` no script (hoje número de teste do Samuel, validado; trocar antes de publicar). Instagram, endereço e depoimentos também ficam em constantes no topo do script; testes em `tests/` (`npx playwright test`).
 - Não invente dados: nada de nota do Google, número de pacientes, endereço, preços ou depoimentos sem confirmação. O que não estiver confirmado vai nas pendências do README.
 - Não é possível retocar rostos de imagens geradas; para corrigir uma expressão, troque o quadro do vídeo.
 - Conferir visual: abra `site/index.html` em 1440px e 390px (Chrome/Playwright, se disponível), role a página toda e verifique que não há rolagem horizontal. Uma captura estática não prova o efeito de rolagem do hero.
