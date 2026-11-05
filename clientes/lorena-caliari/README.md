@@ -15,6 +15,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `site/robots.txt` e `site/sitemap.exemplo.xml` — prontos; a linha do sitemap fica comentada até existir o domínio final.
 - `gemini_generated_video_1961092c.mp4` — vídeo de origem (10 s, 1280×720).
 - `tests/smoke.spec.js`, `playwright.config.js`, `package.json` — testes automáticos (ver "Testes").
+- `Lorena-Caliari-Home.html` — a home inteira em um arquivo só (CSS, fontes e imagens embutidos, cerca de 4 MB) para abrir no PC sem servidor. Gerado por `python3 scripts/arquivo-unico.py`; rode de novo sempre que mudar algo em `site/`.
 - `docs/capturas/` — capturas antes/depois da rodada de polimento (não são publicadas com o site).
 
 ## Dados da cliente (só no script do fim do `index.html`)
