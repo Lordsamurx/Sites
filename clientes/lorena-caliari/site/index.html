@@ -6,7 +6,20 @@
 <title>Lorena Caliari | Estética Avançada</title>
 <meta name="description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
 <meta name="theme-color" content="#fffbf7">
+<meta name="robots" content="index, follow">
+<!-- TODO (URL final): descomentar com o domínio definitivo.
+<link rel="canonical" href="https://DOMINIO-FINAL/">
+<meta property="og:url" content="https://DOMINIO-FINAL/">
+<meta property="og:image" content="https://DOMINIO-FINAL/assets/og.jpg">
+-->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Lorena Caliari Estética Avançada">
+<meta property="og:title" content="Lorena Caliari | Estética Avançada">
+<meta property="og:description" content="Protocolos de estética avançada pensados para realçar, nunca transformar. Agende uma avaliação com a farmacêutica Lorena Caliari.">
+<meta name="twitter:card" content="summary_large_image">
 <script>
+  document.documentElement.classList.add("js");   // com JS ativo, as entradas ao rolar podem começar escondidas (sem JS, tudo aparece)
   // Preload das fontes só quando servido por http(s): aberto direto do disco (file://) o Chrome bloqueia o preload por CORS; as fontes carregam pelo CSS do mesmo jeito.
   if (location.protocol !== "file:") ["cormorant-garamond", "cormorant-garamond-italic", "manrope"].forEach((f) => {
     const l = document.createElement("link"); l.rel = "preload"; l.as = "font"; l.type = "font/woff2"; l.crossOrigin = ""; l.href = `assets/fonts/${f}.woff2`; document.head.appendChild(l);
@@ -18,6 +31,18 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/site.css">
+<!-- Dados estruturados: só o que é confirmado. TODO (depende da Lorena): "url" e "image" (URL final), "telephone",
+     "address" (PostalAddress), "openingHoursSpecification", "sameAs" (Instagram). Nada de nota ou avaliação sem dados reais. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HealthAndBeautyBusiness",
+  "name": "Lorena Caliari Estética Avançada",
+  "description": "Protocolos de estética avançada pensados para realçar, nunca transformar. Avaliação individual com a farmacêutica Lorena Caliari.",
+  "founder": { "@type": "Person", "name": "Lorena Caliari", "jobTitle": "Farmacêutica" },
+  "knowsAbout": ["Bioestimuladores", "Skinbooster", "Harmonização facial", "Limpeza de pele", "Peeling", "Microagulhamento"]
+}
+</script>
 </head>
 <body class="in-hero">
 <a class="skip" href="#conteudo">Pular para o conteúdo</a>
