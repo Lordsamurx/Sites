@@ -1,0 +1,14 @@
+{
+  "name": "lorena-caliari-site",
+  "private": true,
+  "description": "Testes da home estática da Lorena Caliari (o site não tem build).",
+  "scripts": {
+    "serve": "http-server site -p 4173 -s -c-1",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@axe-core/playwright": "4.10.2",
+    "http-server": "14.1.1"
+  }
+}
