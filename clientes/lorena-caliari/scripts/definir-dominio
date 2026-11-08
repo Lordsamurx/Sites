@@ -1,0 +1,192 @@
+#!/usr/bin/env node
+// Define o domínio final do site da Lorena Caliari em um passo só.
+//
+// Uso:
+//   node scripts/definir-dominio <dominio> [--dry-run] [--site CAMINHO]
+//   ex.: node scripts/definir-dominio exemplo.com.br --dry-run
+//
+// O que faz (tudo dentro de site/, salvo --site):
+//   1. index.html: ativa/atualiza <link rel="canonical">, og:url e og:image no head.
+//   2. index.html: preenche "url" no JSON-LD (BeautySalon).
+//   3. robots.txt: ativa a linha "Sitemap: https://<dominio>/sitemap.xml".
+//   4. sitemap.xml: gera a partir de sitemap.exemplo.xml (o modelo não é alterado).
+//
+// Idempotente: rodar de novo com o mesmo domínio não muda nada; com outro domínio, troca o domínio
+// nos mesmos pontos (nunca duplica tag, linha ou chave). --dry-run só mostra o que mudaria.
+// Sem dependências: só Node. Preserva o fim de linha (CRLF/LF) de cada arquivo.
+
+const fs = require("fs");
+const path = require("path");
+
+const PLACEHOLDER = "DOMINIO-FINAL";
+const AJUDA = `Uso: node scripts/definir-dominio <dominio> [--dry-run] [--site CAMINHO]
+
+  <dominio>     domínio final, ex.: exemplo.com.br (aceita https:// e barra final; grava sempre https)
+  --dry-run     mostra o que mudaria, sem gravar nada
+  --site DIR    pasta do site (padrão: site/ deste projeto); útil para testar numa cópia
+  -h, --help    esta ajuda`;
+
+function falhar(msg) {
+  console.error(`Erro: ${msg}`);
+  process.exit(1);
+}
+
+// ---------- argumentos ----------
+const args = process.argv.slice(2);
+let dryRun = false;
+let siteDir = path.join(__dirname, "..", "site");
+let entrada = null;
+for (let i = 0; i < args.length; i++) {
+  const a = args[i];
+  if (a === "-h" || a === "--help") { console.log(AJUDA); process.exit(0); }
+  else if (a === "--dry-run") dryRun = true;
+  else if (a === "--site") { siteDir = args[++i]; if (!siteDir) falhar("--site pede um caminho."); }
+  else if (a.startsWith("-")) falhar(`opção desconhecida: ${a}\n\n${AJUDA}`);
+  else if (entrada === null) entrada = a;
+  else falhar(`argumento a mais: ${a}`);
+}
+if (entrada === null) falhar(`informe o domínio.\n\n${AJUDA}`);
+
+// ---------- domínio ----------
+function normalizarDominio(bruto) {
+  let d = bruto.trim().replace(/^https?:\/\//i, "").replace(/\/+$/, "").toLowerCase();
+  if (!d) falhar("domínio vazio.");
+  if (/[\s/?#:@]/.test(d)) falhar(`"${bruto}" não parece um domínio simples (sem caminho, porta, usuário ou espaço). Exemplo: exemplo.com.br`);
+  if (!/^(?=.{4,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}$/.test(d)) falhar(`"${bruto}" não é um domínio válido. Exemplo: exemplo.com.br`);
+  if (d.includes(PLACEHOLDER.toLowerCase())) falhar("isso ainda é o marcador DOMINIO-FINAL; informe o domínio real.");
+  return d;
+}
+const dominio = normalizarDominio(entrada);
+const base = `https://${dominio}`;
+
+// ---------- utilidades ----------
+const lerArquivo = (nome) => {
+  const p = path.join(siteDir, nome);
+  if (!fs.existsSync(p)) falhar(`arquivo não encontrado: ${p}`);
+  return fs.readFileSync(p, "utf8");
+};
+const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// ---------- index.html ----------
+function editarIndex(txt) {
+  let out = txt;
+
+  // 1a. Bloco ainda comentado (TODO): vira tags ativas. Se já estiver ativo, este passo não encontra nada.
+  const comentado = /<!-- TODO \(URL final\)[^\r\n]*\r?\n([\s\S]*?)-->/.exec(out);
+  if (comentado && comentado[1].includes('rel="canonical"')) {
+    const tags = comentado[1].replace(/\r?\n$/, "");
+    out = out.replace(comentado[0], () => tags);
+  }
+
+  // 1b. Tags ativas: troca só o domínio (e para canonical/og:url, a URL inteira). Idempotente por construção.
+  const tags = [
+    ["canonical", /(<link rel="canonical" href=")[^"]*(">)/, (m) => `${m[1]}${base}/${m[2]}`],
+    ["og:url", /(<meta property="og:url" content=")[^"]*(">)/, (m) => `${m[1]}${base}/${m[2]}`],
+    // og:image: mantém o caminho já escolhido (hoje /assets/og.jpg) e troca só a origem.
+    ["og:image", /(<meta property="og:image" content=")(?:https?:\/\/[^"\/]+)?([^"]*)(">)/, (m) => `${m[1]}${base}${m[2] || "/assets/og.jpg"}${m[3]}`],
+  ];
+  for (const [nome, re, fn] of tags) {
+    const todas = out.match(new RegExp(re.source, "g")) || [];
+    if (todas.length === 0) falhar(`não achei a tag ${nome} no head de index.html (nem ativa, nem no bloco TODO).`);
+    if (todas.length > 1) falhar(`a tag ${nome} aparece ${todas.length} vezes em index.html; resolva à mão antes.`);
+    out = out.replace(re, (...g) => fn(g));
+  }
+
+  // 2. JSON-LD: "url" no nível raiz (2 espaços de recuo), logo depois de "name".
+  const ld = /(<script type="application\/ld\+json">\r?\n)([\s\S]*?)(\r?\n<\/script>)/.exec(out);
+  if (!ld) falhar("não achei o bloco JSON-LD em index.html.");
+  let json = ld[2];
+  const linhaUrl = /^  "url": "[^"]*",?[ \t]*$/m;
+  if (linhaUrl.test(json)) {
+    json = json.replace(linhaUrl, `  "url": "${base}/",`);
+  } else {
+    const linhaNome = /^(  "name": "[^"]*",)([ \t]*)(\r?\n)/m;
+    if (!linhaNome.test(json)) falhar('não achei a linha  "name" no JSON-LD para encaixar o "url".');
+    json = json.replace(linhaNome, (_, nome, esp, eol) => `${nome}${eol}  "url": "${base}/",${eol}`);
+  }
+  let parsed;
+  try { parsed = JSON.parse(json); } catch (e) { falhar(`o JSON-LD ficaria inválido (${e.message}); nada foi gravado.`); }
+  if (parsed.url !== `${base}/`) falhar('o "url" do JSON-LD não ficou no nível raiz; nada foi gravado.');
+  out = out.replace(ld[0], () => ld[1] + json + ld[3]);
+
+  // 3. O "url" deixa de ser pendência no comentário do JSON-LD.
+  out = out.replace('"url" (domínio final), ', "");
+
+  return out;
+}
+
+// ---------- robots.txt ----------
+function editarRobots(txt) {
+  let out = txt.replace(/^# TODO \(URL final\)[^\r\n]*\r?\n/m, ""); // some o aviso, a pendência acabou
+  const linha = `Sitemap: ${base}/sitemap.xml`;
+  const re = /^#?[ \t]*Sitemap:[^\r\n]*$/gm;
+  const achadas = out.match(re) || [];
+  if (achadas.length === 0) {
+    const eol = out.includes("\r\n") ? "\r\n" : "\n";
+    out = out.replace(/(\r?\n)*$/, eol) + eol + linha + eol;
+  } else if (achadas.length === 1) {
+    out = out.replace(re, linha);
+  } else {
+    falhar("robots.txt tem mais de uma linha Sitemap; resolva à mão antes.");
+  }
+  return out;
+}
+
+// ---------- sitemap.xml (a partir do modelo) ----------
+function gerarSitemap(modelo) {
+  const out = modelo.replace(/<!-- Modelo\.[\s\S]*?-->\r?\n/, "").split(PLACEHOLDER).join(dominio);
+  if (out.includes(PLACEHOLDER)) falhar("sobrou DOMINIO-FINAL no sitemap gerado.");
+  return out;
+}
+
+// ---------- plano: calcula tudo antes de gravar qualquer coisa ----------
+const plano = [
+  { nome: "index.html", antes: lerArquivo("index.html") },
+  { nome: "robots.txt", antes: lerArquivo("robots.txt") },
+  { nome: "sitemap.xml", antes: fs.existsSync(path.join(siteDir, "sitemap.xml")) ? lerArquivo("sitemap.xml") : null },
+];
+plano[0].depois = editarIndex(plano[0].antes);
+plano[1].depois = editarRobots(plano[1].antes);
+plano[2].depois = gerarSitemap(lerArquivo("sitemap.exemplo.xml"));
+
+// Conferência final: nenhum marcador pode sobrar nos arquivos de saída.
+for (const a of plano) {
+  const sobra = a.depois.split(/\r?\n/).filter((l) => l.includes(PLACEHOLDER) && !l.trim().startsWith("<!--"));
+  if (sobra.length) falhar(`${a.nome} ainda tem ${PLACEHOLDER} fora de comentário: ${sobra[0].trim()}`);
+}
+
+// ---------- relatório (diff por linhas, via maior subsequência comum; arquivos pequenos) ----------
+function mostrarDiff(antes, depois) {
+  const A = antes === null ? [] : antes.split(/\r?\n/);
+  const B = depois.split(/\r?\n/);
+  const n = A.length, m = B.length;
+  const L = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const corta = (l) => (l.length > 160 ? l.slice(0, 157) + "..." : l);
+  let i = 0, j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && A[i] === B[j]) { i++; j++; }
+    else if (j >= m || (i < n && L[i + 1][j] >= L[i][j + 1])) console.log(`    - ${corta(A[i++])}`);
+    else console.log(`    + ${corta(B[j++])}`);
+  }
+}
+
+console.log(`${dryRun ? "[dry-run] " : ""}Domínio: ${dominio}  (pasta: ${path.resolve(siteDir)})`);
+let mudou = 0;
+for (const a of plano) {
+  if (a.antes === a.depois) { console.log(`  = ${a.nome}: sem mudanças`); continue; }
+  mudou++;
+  const criar = a.antes === null;
+  const verbo = criar ? (dryRun ? "seria criado" : "criado") : (dryRun ? "mudaria" : "alterado");
+  console.log(`  ${criar ? "+" : "~"} ${a.nome}: ${verbo}`);
+  mostrarDiff(a.antes, a.depois);
+  if (!dryRun) fs.writeFileSync(path.join(siteDir, a.nome), a.depois, "utf8");
+}
+
+if (!fs.existsSync(path.join(siteDir, "assets", "og.jpg"))) {
+  console.log(`\nAviso: ${path.join(siteDir, "assets", "og.jpg")} ainda não existe (imagem 1200×630 a criar). O og:image aponta para ela e vai dar 404 até lá.`);
+}
+if (mudou && !dryRun) {
+  console.log("\nPróximo passo: regenerar o arquivo único (python3 scripts/arquivo-unico.py) e rodar npx playwright test.");
+}
+console.log(mudou ? (dryRun ? "\nNada foi gravado (--dry-run)." : "\nPronto.") : "\nNada a fazer: já está com esse domínio.");

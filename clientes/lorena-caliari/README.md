@@ -12,7 +12,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `site/assets/logo-*.png` — logo com fundo transparente (recorte automático do cartão original 260×164). Masters; a página usa as versões `.webp` redimensionadas.
 - `site/assets/lorena.png` — master da foto; a página usa `lorena.webp`. `favicon.png` vem do símbolo dourado.
 - `site/assets/frames/h-000-m.webp` — pôster do hero em 1000 px para o celular (via `srcset`); o quadro 0 do canvas reaproveita o mesmo arquivo.
-- `site/robots.txt` e `site/sitemap.exemplo.xml` — prontos; a linha do sitemap fica comentada até existir o domínio final.
+- `site/robots.txt` e `site/sitemap.exemplo.xml` — prontos; a linha do sitemap fica comentada até existir o domínio final. `scripts/definir-dominio` preenche tudo de uma vez (ver "Definir o domínio final").
 - `gemini_generated_video_1961092c.mp4` — vídeo de origem (10 s, 1280×720).
 - `tests/smoke.spec.js`, `playwright.config.js`, `package.json` — testes automáticos (ver "Testes").
 - `Lorena-Caliari-Home.html` — a home inteira em um arquivo só (CSS, fontes e imagens embutidos, cerca de 4 MB) para abrir no PC sem servidor. Gerado por `python3 scripts/arquivo-unico.py`; rode de novo sempre que mudar algo em `site/`.
@@ -38,12 +38,27 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
    ```
    `origem` é opcional (aparece como "via Google"). O texto entra com `textContent` (HTML não é interpretado). Com 1 ou mais itens, a seção aparece com o carrossel.
 
+## Definir o domínio final
+Quando a Lorena tiver o domínio, um comando preenche todos os pontos que dependem dele (só Node, sem dependência nova):
+```bash
+node scripts/definir-dominio exemplo.com.br --dry-run   # só mostra o que mudaria (diff), não grava nada
+node scripts/definir-dominio exemplo.com.br             # aplica
+```
+- **`site/index.html`:** ativa `canonical`, `og:url` e `og:image` (o bloco comentado com TODO no head vira tag de verdade) e preenche `"url"` no JSON-LD.
+- **`site/robots.txt`:** ativa a linha `Sitemap: https://<dominio>/sitemap.xml`.
+- **`site/sitemap.xml`:** gerado a partir de `sitemap.exemplo.xml` (o modelo não é alterado).
+- Aceita `exemplo.com.br`, `https://exemplo.com.br/` ou `EXEMPLO.com.br`; grava sempre `https://` e minúsculas. Rejeita caminho, porta e marcador `DOMINIO-FINAL`; qualquer erro sai antes de gravar.
+- **Idempotente:** com o mesmo domínio, a segunda execução diz "Nada a fazer" e não muda byte algum. Com outro domínio, troca nos mesmos pontos, sem duplicar tag, chave ou linha. Preserva o fim de linha (CRLF) dos arquivos.
+- `--site CAMINHO` aponta para outra pasta (cópia de `site/`), usado nos testes.
+- Depois de rodar: regenerar `Lorena-Caliari-Home.html` (`python3 scripts/arquivo-unico.py`) e rodar `npx playwright test`.
+- **Não cria** a imagem `site/assets/og.jpg` (1200×630): o script avisa enquanto ela não existir, e o `og:image` dá 404 até lá. Também não mexe em telefone, endereço, horário, Instagram nem CRF, que dependem da Lorena.
+
 ## Testes
 ```bash
 npm install
 npx playwright test
 ```
-- Sobe sozinho um servidor local (`http-server site -p 4173`). 51 testes no Chromium: console, WhatsApp válido/inválido, âncoras, mapa, Instagram, quadros do hero (movimento reduzido, celular, economia de dados), loop de rAF em repouso, menu (Esc e `aria-*`), carrossel, depoimentos, rolagem horizontal de 320 a 1920 px e zoom de 200%, colisão do cabeçalho, sobreposição no hero e no painel escuro, sem JS, sem imagens, axe-core, alvos de toque e tamanho mínimo de texto.
+- Sobe sozinho um servidor local (`http-server site -p 4173`). 58 testes no Chromium (7 deles cobrem `scripts/definir-dominio` numa cópia temporária de `site/`, sem navegador): console, WhatsApp válido/inválido, âncoras, mapa, Instagram, quadros do hero (movimento reduzido, celular, economia de dados), loop de rAF em repouso, menu (Esc e `aria-*`), carrossel, depoimentos, rolagem horizontal de 320 a 1920 px e zoom de 200%, colisão do cabeçalho, sobreposição no hero e no painel escuro, sem JS, sem imagens, axe-core, alvos de toque e tamanho mínimo de texto.
 - Firefox e WebKit (motor do Safari) não estão no `playwright.config.js` porque não estavam instalados no ambiente desta rodada; ver o comentário no arquivo.
 - Lighthouse: `npx lighthouse http://localhost:4173/ --view` (celular) e `--preset=desktop`.
 
@@ -76,7 +91,7 @@ Dependem da Lorena (não inventar; o site está preparado para receber):
 - **Instagram:** `INSTAGRAM_URL` vazio (chip escondido). Depois, acrescentar em `sameAs` no JSON-LD.
 - **Endereço, cidade, horário e telefone:** `ADDRESS` vazio ("Endereço em breve"). No JSON-LD faltam `address`, `telephone` e `openingHoursSpecification` (TODO no comentário acima dele).
 - **CRF:** comentário TODO no rodapé; não publicar sem o número real.
-- **URL final:** `canonical`, `og:url`, `og:image` (imagem 1200×630 a criar), `url` do JSON-LD, linha `Sitemap` do `robots.txt` e `sitemap.exemplo.xml` → `sitemap.xml`. O SEO só chega a 100 de verdade com isso.
+- **URL final:** falta só o domínio da Lorena. Com ele, rodar `node scripts/definir-dominio <dominio>` (preenche `canonical`, `og:url`, `og:image`, `url` do JSON-LD, linha `Sitemap` do `robots.txt` e gera `sitemap.xml`; ver "Definir o domínio final"). Continua pendente a **imagem `og.jpg` 1200×630** em `site/assets/`. O SEO só chega a 100 de verdade com isso.
 - **Depoimentos reais** com autorização por escrito (ver "Como preencher os depoimentos"). Confirmar com o CRF se depoimentos são permitidos.
 - **Textos a validar:** nomes e descrições dos tratamentos (só "Bioestimuladores" e "Skinbooster" vêm do design system); balões do hero; cartões do carrossel dos pilares; título "O que dizem as pacientes"; respostas revisadas do FAQ; "Venha me visitar".
 - **Foto da Lorena** em alta resolução (a atual tem 546×591) e **logo** vetorial (SVG/PNG grande; o recorte atual é automático e o `logo-mark.webp` pesa 37 KB para aparecer com cerca de 200 px no celular).
