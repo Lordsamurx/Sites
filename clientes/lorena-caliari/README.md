@@ -16,6 +16,7 @@ Home estática (HTML + CSS + JS puro, sem build). Abrir `site/index.html` no nav
 - `gemini_generated_video_1961092c.mp4` — vídeo de origem (10 s, 1280×720).
 - `tests/smoke.spec.js`, `playwright.config.js`, `package.json` — testes automáticos (ver "Testes").
 - `Lorena-Caliari-Home.html` — a home inteira em um arquivo só (CSS, fontes e imagens embutidos, cerca de 4 MB) para abrir no PC sem servidor. Gerado por `python3 scripts/arquivo-unico.py`; rode de novo sempre que mudar algo em `site/`.
+- `scripts/definir-dominio.py` — preenche canonical, og:url, og:image, JSON-LD, robots.txt e sitemap.xml a partir do domínio final (ver "Definir o domínio final").
 - `docs/capturas/` — capturas antes/depois da rodada de polimento (não são publicadas com o site).
 - `automacao-whatsapp/` — agente de WhatsApp no n8n (leads, dúvidas, agendamento e cancelamento no Google Agenda). Guia de implantação e pendências no `README.md` da pasta.
 
@@ -47,6 +48,21 @@ npx playwright test
 - Firefox e WebKit (motor do Safari) não estão no `playwright.config.js` porque não estavam instalados no ambiente desta rodada; ver o comentário no arquivo.
 - Lighthouse: `npx lighthouse http://localhost:4173/ --view` (celular) e `--preset=desktop`.
 
+## Definir o domínio final
+Script em Python (só biblioteca padrão): `scripts/definir-dominio.py`. Rode de `clientes/lorena-caliari`.
+
+```bash
+python3 scripts/definir-dominio.py DOMINIO --dry-run   # só mostra o que mudaria (diff), não grava
+python3 scripts/definir-dominio.py DOMINIO             # aplica
+```
+
+- `DOMINIO` é obrigatório e nunca é presumido; aceita `exemplo.com.br` ou `https://exemplo.com.br/`. Sempre grava `https`.
+- Em `site/index.html`: tira do comentário TODO e preenche `canonical`, `og:url` e `og:image`, e acrescenta/atualiza `"url"` no JSON-LD.
+- Em `site/robots.txt`: ativa a linha `Sitemap:`. Em `site/sitemap.xml`: gera a partir de `site/sitemap.exemplo.xml` (o modelo não muda).
+- Idempotente: repetir com o mesmo domínio não muda nada e não duplica tags; com outro domínio, troca o anterior. Se algo falhar, nenhum arquivo é alterado.
+- `--site PASTA` aponta para outra pasta (útil para testar numa cópia). Depois de aplicar, rode `python3 scripts/arquivo-unico.py` para atualizar o `Lorena-Caliari-Home.html`.
+- Não cria a imagem `og.jpg`; avisa se ela não existir em `site/assets/`.
+
 ## Desempenho
 Lighthouse 12.8 (servidor local, mediana de 2 execuções), novembro de 2026:
 
@@ -76,7 +92,7 @@ Dependem da Lorena (não inventar; o site está preparado para receber):
 - **Instagram:** `INSTAGRAM_URL` vazio (chip escondido). Depois, acrescentar em `sameAs` no JSON-LD.
 - **Endereço, cidade, horário e telefone:** `ADDRESS` vazio ("Endereço em breve"). No JSON-LD faltam `address`, `telephone` e `openingHoursSpecification` (TODO no comentário acima dele).
 - **CRF:** comentário TODO no rodapé; não publicar sem o número real.
-- **URL final:** `canonical`, `og:url`, `og:image` (imagem 1200×630 a criar), `url` do JSON-LD, linha `Sitemap` do `robots.txt` e `sitemap.exemplo.xml` → `sitemap.xml`. O SEO só chega a 100 de verdade com isso.
+- **URL final:** depende de definir o domínio. Quando ele existir, rode `python3 scripts/definir-dominio.py DOMINIO` (veja "Definir o domínio final"): o script já preenche `canonical`, `og:url`, `og:image`, `url` do JSON-LD, a linha `Sitemap` do `robots.txt` e gera o `sitemap.xml`. Falta só a **imagem `site/assets/og.jpg` (1200×630), a criar**; o script avisa enquanto ela não existir. O SEO só chega a 100 de verdade com isso. Domínio ainda não definido: nada foi aplicado ao site.
 - **Depoimentos reais** com autorização por escrito (ver "Como preencher os depoimentos"). Confirmar com o CRF se depoimentos são permitidos.
 - **Textos a validar:** nomes e descrições dos tratamentos (só "Bioestimuladores" e "Skinbooster" vêm do design system); balões do hero; cartões do carrossel dos pilares; título "O que dizem as pacientes"; respostas revisadas do FAQ; "Venha me visitar".
 - **Foto da Lorena** em alta resolução (a atual tem 546×591) e **logo** vetorial (SVG/PNG grande; o recorte atual é automático e o `logo-mark.webp` pesa 37 KB para aparecer com cerca de 200 px no celular).
